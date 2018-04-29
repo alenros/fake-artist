@@ -1,9 +1,4 @@
-import { Template } from 'meteor/templating';
-import { ReactiveVar } from 'meteor/reactive-var';
-
-import './spyfall.html';
-
-Handlebars.registerHelper('toCapitalCase', function (str) {
+﻿Handlebars.registerHelper('toCapitalCase', function(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 });
 
@@ -36,7 +31,7 @@ function setUserLanguage(language) {
 
 function getLanguageDirection() {
   var language = getUserLanguage()
-  var rtlLanguages = ['he', 'ar', 'fa'];
+  var rtlLanguages = ['he', 'ar'];
 
   if ($.inArray(language, rtlLanguages) !== -1) {
     return 'rtl';
@@ -49,7 +44,7 @@ function getLanguageList() {
   var languages = TAPi18n.getLanguages();
   var languageList = _.map(languages, function(value, key) {
     var selected = "";
-
+    
     if (key == getUserLanguage()){
       selected = "selected";
     }
@@ -66,11 +61,11 @@ function getLanguageList() {
       languageDetails: value
     };
   });
-
+  
   if (languageList.length <= 1){
     return null;
   }
-
+  
   return languageList;
 }
 
@@ -117,7 +112,7 @@ function generateNewGame(){
     accessCode: generateAccessCode(),
     state: "waitingForPlayers",
     location: null,
-    lengthInMinutes: 8,
+    lengthInMinutes: 10,
     endTime: null,
     paused: false,
     pausedTime: null
@@ -141,6 +136,36 @@ function generateNewPlayer(game, name){
   var playerID = Players.insert(player);
 
   return Players.findOne(playerID);
+}
+
+function getRandomLocation(){
+
+	if(getUserLanguage()=="he")
+	{
+	var locationIndex = Math.floor(Math.random() * locations_he.length);
+	return locations_he[locationIndex];
+	}
+	else
+	{
+	  var locationIndex = Math.floor(Math.random() * locations_en.length);
+	  return locations_en[locationIndex];
+	}
+}
+
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
+
+function assignRoles(players, location){
+  players.forEach(function(player){
+      Players.update(player._id, {$set: {role: location.roles[0]}});
+  });
 }
 
 function resetUserState(){
@@ -179,7 +204,7 @@ function trackGameState () {
   }
 }
 
-function leaveGame () {
+function leaveGame () {  
   GAnalytics.event("game-actions", "gameleave");
   var player = getCurrentPlayer();
 
@@ -208,7 +233,7 @@ if (hasHistoryApi()){
     } else {
       accessCode = Session.get('urlAccessCode');
     }
-
+    
     var currentURL = '/';
     if (accessCode){
       currentURL += accessCode+'/';
@@ -219,22 +244,10 @@ if (hasHistoryApi()){
 }
 Tracker.autorun(trackGameState);
 
-window.onbeforeunload = resetUserState;
-window.onpagehide = resetUserState;
-
 FlashMessages.configure({
   autoHide: true,
   autoScroll: false
 });
-
-Template.main.rendered = function() {
-  $.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", function() {
-    var ads, adsbygoogle;
-    ads = '<ins class="adsbygoogle" style="display:block;" data-ad-client="ca-pub-3450817379541922" data-ad-slot="4101511012" data-ad-format="auto"></ins>';
-    $('.adspace').html(ads);
-    return (adsbygoogle = window.adsbygoogle || []).push({});
-  });
-};
 
 Template.main.helpers({
   whichView: function() {
@@ -275,9 +288,6 @@ Template.startMenu.events({
 });
 
 Template.startMenu.helpers({
-  announcement: function() {
-    return Meteor.settings.public.announcement;
-  },
   alternativeURL: function() {
     return Meteor.settings.public.alternative;
   }
@@ -295,7 +305,7 @@ Template.createGame.events({
 
     var playerName = event.target.playerName.value;
 
-    if (!playerName || Session.get('loading')) {
+    if (!playerName) {
       return false;
     }
 
@@ -305,7 +315,7 @@ Template.createGame.events({
     Meteor.subscribe('games', game.accessCode);
 
     Session.set("loading", true);
-
+    
     Meteor.subscribe('players', game._id, function onReady(){
       Session.set("loading", false);
 
@@ -339,7 +349,7 @@ Template.joinGame.events({
     var accessCode = event.target.accessCode.value;
     var playerName = event.target.playerName.value;
 
-    if (!playerName || Session.get('loading')) {
+    if (!playerName) {
       return false;
     }
 
@@ -358,11 +368,6 @@ Template.joinGame.events({
       if (game) {
         Meteor.subscribe('players', game._id);
         player = generateNewPlayer(game, playerName);
-
-        if (game.state === "inProgress") {
-          var default_role = game.location.roles[game.location.roles.length - 1];
-          Players.update(player._id, {$set: {role: default_role}});
-        }
 
         Session.set('urlAccessCode', null);
         Session.set("gameID", game._id);
@@ -431,10 +436,6 @@ Template.lobby.helpers({
     });
 
     return players;
-  },
-  isLoading: function() {
-    var game = getCurrentGame();
-    return game.state === 'settingUp';
   }
 });
 
@@ -444,7 +445,24 @@ Template.lobby.events({
     GAnalytics.event("game-actions", "gamestart");
 
     var game = getCurrentGame();
-    Games.update(game._id, {$set: {state: 'settingUp'}});
+    var location = getRandomLocation();
+    var players = Players.find({gameID: game._id});
+    var localEndTime = moment().add(game.lengthInMinutes, 'minutes');
+    var gameEndTime = TimeSync.serverTime(localEndTime);
+
+    var spyIndex = Math.floor(Math.random() * players.count());
+    var firstPlayerIndex = Math.floor(Math.random() * players.count());
+
+    players.forEach(function(player, index){
+      Players.update(player._id, {$set: {
+        isSpy: index === spyIndex,
+        isFirstPlayer: index === firstPlayerIndex
+      }});
+    });
+
+    assignRoles(players, location);
+    
+    Games.update(game._id, {$set: {state: 'inProgress', location: location, endTime: gameEndTime, paused: false, pausedTime: null}});
   },
   'click .btn-toggle-qrcode': function () {
     $(".qrcode-container").toggle();
@@ -490,7 +508,7 @@ Template.gameView.helpers({
   player: getCurrentPlayer,
   players: function () {
     var game = getCurrentGame();
-
+    
     if (!game){
       return null;
     }
@@ -502,7 +520,7 @@ Template.gameView.helpers({
     return players;
   },
   locations: function () {
-    return locations;
+    return locations_en;
   },
   gameFinished: function () {
     var timeRemaining = getTimeRemaining();
@@ -539,17 +557,5 @@ Template.gameView.events({
       GAnalytics.event("game-actions", "pause");
       Games.update(game._id, {$set: {paused: true, pausedTime: currentServerTime}});
     }
-  },
-  'click .player-name': function (event) {
-    event.currentTarget.className = 'player-name-striked';
-  },
-  'click .player-name-striked': function(event) {
-    event.currentTarget.className = 'player-name';
-  },
-  'click .location-name': function (event) {
-    event.target.className = 'location-name-striked';
-  },
-  'click .location-name-striked': function(event) {
-    event.target.className = 'location-name';
   }
 });
