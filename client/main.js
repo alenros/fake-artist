@@ -84,7 +84,7 @@ function getAccessLink(){
     return;
   }
 
-  return Meteor.settings.public.url + game.accessCode + "/";
+  return game.accessCode + "/";
 }
 
 
@@ -103,7 +103,6 @@ function generateAccessCode(){
     for(var i=0; i < 6; i++){
       code += possible.charAt(Math.floor(Math.random() * possible.length));
     }
-
     return code;
 }
 
@@ -229,7 +228,7 @@ if (hasHistoryApi()){
     var accessCode = null;
     var game = getCurrentGame();
     if (game){
-      accessCode = game.accessCode;
+      //accessCode = game.accessCode;
     } else {
       accessCode = Session.get('urlAccessCode');
     }
