@@ -1,5 +1,6 @@
 # A Fake Artist Goes to New York
- 
+![Logo](public/img/logo-en.png)
+
 This player aid for A Fake Artist Goes to New York eliminates the need for a Question master and lets everyone participate.
 
 This code powers https://fake-artist.herokuapp.com - where you can play the game.
