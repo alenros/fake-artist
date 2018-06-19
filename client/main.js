@@ -480,6 +480,7 @@ Template.lobby.events({
 
 Template.lobby.rendered = function (event) {
   var url = getAccessLink();
+  url = "https://fake-artist.herokuapp.com/"+url;
   var qrcodesvg = new Qrcodesvg(url, "qrcode", 250);
   qrcodesvg.draw();
 };
