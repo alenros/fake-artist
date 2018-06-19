@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/alenros/fake-artist.svg?branch=master)](https://travis-ci.org/alenros/fake-artist)
+
 # A Fake Artist Goes to New York
 ![Logo](public/img/logo-en.png)
 
