@@ -103,6 +103,7 @@ function generateAccessCode(){
     for(var i=0; i < 6; i++){
       code += possible.charAt(Math.floor(Math.random() * possible.length));
     }
+
     return code;
 }
 
@@ -137,7 +138,7 @@ function generateNewPlayer(game, name){
   return Players.findOne(playerID);
 }
 
-function getRandomLocation(){
+function getRandomWordAndCategory(){
 
 	if(getUserLanguage()=="he")
 	{
@@ -161,9 +162,9 @@ function shuffleArray(array) {
     return array;
 }
 
-function assignRoles(players, location){
+function assignCategory(players, word, category){
   players.forEach(function(player){
-      Players.update(player._id, {$set: {role: location.roles[0]}});
+      Players.update(player._id, {$set: {role: category}});
   });
 }
 
@@ -204,7 +205,6 @@ function trackGameState () {
 }
 
 function leaveGame () {  
-  GAnalytics.event("game-actions", "gameleave");
   var player = getCurrentPlayer();
 
   Session.set("currentView", "startMenu");
@@ -228,7 +228,7 @@ if (hasHistoryApi()){
     var accessCode = null;
     var game = getCurrentGame();
     if (game){
-      //accessCode = game.accessCode;
+      accessCode = game.accessCode;
     } else {
       accessCode = Session.get('urlAccessCode');
     }
@@ -268,12 +268,10 @@ Template.footer.events({
   'click .btn-set-language': function (event) {
     var language = $(event.target).data('language');
     setUserLanguage(language);
-    GAnalytics.event("language-actions", "set-language-" + language);
   },
   'change .language-select': function (event) {
     var language = event.target.value;
     setUserLanguage(language);
-    GAnalytics.event("language-actions", "set-language-" + language);
   }
 })
 
@@ -293,14 +291,11 @@ Template.startMenu.helpers({
 });
 
 Template.startMenu.rendered = function () {
-  GAnalytics.pageview("/");
-
   resetUserState();
 };
 
 Template.createGame.events({
   'submit #create-game': function (event) {
-    GAnalytics.event("game-actions", "newgame");
 
     var playerName = event.target.playerName.value;
 
@@ -343,8 +338,6 @@ Template.createGame.rendered = function (event) {
 
 Template.joinGame.events({
   'submit #join-game': function (event) {
-    GAnalytics.event("game-actions", "gamejoin");
-
     var accessCode = event.target.accessCode.value;
     var playerName = event.target.playerName.value;
 
@@ -374,7 +367,6 @@ Template.joinGame.events({
         Session.set("currentView", "lobby");
       } else {
         FlashMessages.sendError(TAPi18n.__("ui.invalid access code"));
-        GAnalytics.event("game-actions", "invalidcode");
       }
     });
 
@@ -440,11 +432,34 @@ Template.lobby.helpers({
 
 Template.lobby.events({
   'click .btn-leave': leaveGame,
+	'click .btn-submit-user-word': function(){
+    var game = getCurrentGame();
+    var word = document.getElementById("user-word").value;
+    var category = document.getElementById("user-category").value;
+
+      var players = Players.find({gameID: game._id});
+      var localEndTime = moment().add(game.lengthInMinutes, 'minutes');
+      var gameEndTime = TimeSync.serverTime(localEndTime);
+  
+      var spyIndex = Math.floor(Math.random() * players.count());
+      var firstPlayerIndex = Math.floor(Math.random() * players.count());
+  
+      players.forEach(function(player, index){
+        Players.update(player._id, {$set: {
+          isSpy: index === spyIndex,
+          isFirstPlayer: index === firstPlayerIndex
+        }});
+      });
+      assignCategory(players, word, category);
+      var wordAndCategory = {
+        name:word,roles: [category]
+      }
+      Games.update(game._id, {$set: {state: 'inProgress', location: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null}});
+    },										  
   'click .btn-start': function () {
-    GAnalytics.event("game-actions", "gamestart");
 
     var game = getCurrentGame();
-    var location = getRandomLocation();
+    var wordAndCategory = getRandomWordAndCategory();
     var players = Players.find({gameID: game._id});
     var localEndTime = moment().add(game.lengthInMinutes, 'minutes');
     var gameEndTime = TimeSync.serverTime(localEndTime);
@@ -459,9 +474,9 @@ Template.lobby.events({
       }});
     });
 
-    assignRoles(players, location);
+    assignCategory(players, wordAndCategory.name ,wordAndCategory.roles[0]);
     
-    Games.update(game._id, {$set: {state: 'inProgress', location: location, endTime: gameEndTime, paused: false, pausedTime: null}});
+    Games.update(game._id, {$set: {state: 'inProgress', location: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null}});
   },
   'click .btn-toggle-qrcode': function () {
     $(".qrcode-container").toggle();
@@ -537,8 +552,6 @@ Template.gameView.helpers({
 Template.gameView.events({
   'click .btn-leave': leaveGame,
   'click .btn-end': function () {
-    GAnalytics.event("game-actions", "gameend");
-
     var game = getCurrentGame();
     Games.update(game._id, {$set: {state: 'waitingForPlayers'}});
   },
@@ -550,11 +563,9 @@ Template.gameView.events({
     var currentServerTime = TimeSync.serverTime(moment());
 
     if(game.paused){
-      GAnalytics.event("game-actions", "unpause");
       var newEndTime = game.endTime - game.pausedTime + currentServerTime;
       Games.update(game._id, {$set: {paused: false, pausedTime: null, endTime: newEndTime}});
     } else {
-      GAnalytics.event("game-actions", "pause");
       Games.update(game._id, {$set: {paused: true, pausedTime: currentServerTime}});
     }
   }
