@@ -99,10 +99,7 @@ function getCurrentPlayer(){
 function generateAccessCode(){
   var code = "";
   var possible = "abcdefghijklmnopqrstuvwxyz";
-
-    for(var i=0; i < 6; i++){
-      code += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
+    code = getRandomWordAndCategory().text + "-" + getRandomWordAndCategory().text;
 
     return code;
 }
