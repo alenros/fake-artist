@@ -111,7 +111,7 @@ function generateNewGame(){
   var game = {
     accessCode: generateAccessCode(),
     state: "waitingForPlayers",
-    location: null,
+    word: null,
     lengthInMinutes: 10,
     endTime: null,
     paused: false,
@@ -128,7 +128,7 @@ function generateNewPlayer(game, name){
   var player = {
     gameID: game._id,
     name: name,
-    role: null,
+    category: null,
     isSpy: false,
     isFirstPlayer: false
   };
@@ -142,13 +142,13 @@ function getRandomWordAndCategory(){
 
 	if(getUserLanguage()=="he")
 	{
-	var locationIndex = Math.floor(Math.random() * locations_he.length);
-	return locations_he[locationIndex];
+	var wordIndex = Math.floor(Math.random() * words_he.length);
+	return words_he[wordIndex];
 	}
 	else
 	{
-	  var locationIndex = Math.floor(Math.random() * locations_en.length);
-	  return locations_en[locationIndex];
+	  var wordIndex = Math.floor(Math.random() * words_en.length);
+	  return words_en[wordIndex];
 	}
 }
 
@@ -164,7 +164,7 @@ function shuffleArray(array) {
 
 function assignCategory(players, word, category){
   players.forEach(function(player){
-      Players.update(player._id, {$set: {role: category}});
+      Players.update(player._id, {$set: {category: category}});
   });
 }
 
@@ -452,9 +452,9 @@ Template.lobby.events({
       });
       assignCategory(players, word, category);
       var wordAndCategory = {
-        name:word,roles: [category]
+        text:word,category:category
       }
-      Games.update(game._id, {$set: {state: 'inProgress', location: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null}});
+      Games.update(game._id, {$set: {state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null}});
     },										  
   'click .btn-start': function () {
 
@@ -474,9 +474,9 @@ Template.lobby.events({
       }});
     });
 
-    assignCategory(players, wordAndCategory.name ,wordAndCategory.roles[0]);
+    assignCategory(players, wordAndCategory.name ,wordAndCategory.category);
     
-    Games.update(game._id, {$set: {state: 'inProgress', location: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null}});
+    Games.update(game._id, {$set: {state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null}});
   },
   'click .btn-toggle-qrcode': function () {
     $(".qrcode-container").toggle();
@@ -534,8 +534,8 @@ Template.gameView.helpers({
 
     return players;
   },
-  locations: function () {
-    return locations_en;
+  words: function () {
+    return words_en;
   },
   gameFinished: function () {
     var timeRemaining = getTimeRemaining();
