@@ -60,7 +60,7 @@
 
     <span class="access-button-separator"></span>
 
-    <a class="access-button btn-send-access-code-email" href='mailto:?subject={{_ "ui.join my spyfall game" }}&body={{ accessLink }}'>
+    <a class="access-button btn-send-access-code-email" href='mailto:?subject={{_ "ui.join my game" }}&body={{ accessLink }}'>
       <i class="fa fa-envelope-o"></i>
     </a>
   </div>
@@ -144,34 +144,34 @@
 
       {{#if player.isSpy }}
 	
-        <div class="player-status player-status-spy"> {{_ "ui.you are the spy" }}</div>
+        <div class="player-status player-status-spy"> {{_ "ui.you are the fake artist" }}</div>
         <div class="current-role">
           <div class="current-role-header">
-            {{_ "ui.your role" }}:
+            {{_ "ui.your category" }}:
           </div>
           <div class="current-role-name">
-	<strong>{{_ player.role }}</strong>
+	<strong>{{_ player.category }}</strong>
           </div>
         </div>
       {{else}}
 	
-        <div class="player-status player-status-not-spy">{{{_ "ui.you are not the spy" }}}</div>
+        <div class="player-status player-status-not-spy">{{{_ "ui.you are not the fake artist" }}}</div>
 
-        <div class="current-location">
-          <div class="current-location-header">
-            {{_ "ui.the location" }}:
+        <div class="current-word">
+          <div class="current-word-header">
+            {{_ "ui.the word" }}:
           </div>
-          <div class="current-location-name">
-            <strong>{{_ game.location.name }}</strong>
+          <div class="current-word-text">
+            <strong>{{_ game.word.text }}</strong>
           </div>
         </div>
 
-        <div class="current-role">
-          <div class="current-role-header">
-            {{_ "ui.your role" }}:
+        <div class="current-category">
+          <div class="current-category-header">
+            {{_ "ui.your category" }}:
           </div>
-          <div class="current-role-name">
-            {{_ player.role }}
+          <div class="current-category-text">
+            {{_ player.category }}
           </div>
         </div>
       {{/if}}
