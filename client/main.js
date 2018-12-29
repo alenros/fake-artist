@@ -126,7 +126,7 @@ function generateNewPlayer(game, name){
     gameID: game._id,
     name: name,
     category: null,
-    isSpy: false,
+    isFakeArtist: false,
     isFirstPlayer: false
   };
 
@@ -438,12 +438,12 @@ Template.lobby.events({
       var localEndTime = moment().add(game.lengthInMinutes, 'minutes');
       var gameEndTime = TimeSync.serverTime(localEndTime);
   
-      var spyIndex = Math.floor(Math.random() * players.count());
+      var fakeArtistIndex = Math.floor(Math.random() * players.count());
       var firstPlayerIndex = Math.floor(Math.random() * players.count());
   
       players.forEach(function(player, index){
         Players.update(player._id, {$set: {
-          isSpy: index === spyIndex,
+          isFakeArtist: index === fakeArtistIndex,
           isFirstPlayer: index === firstPlayerIndex
         }});
       });
@@ -461,12 +461,12 @@ Template.lobby.events({
     var localEndTime = moment().add(game.lengthInMinutes, 'minutes');
     var gameEndTime = TimeSync.serverTime(localEndTime);
 
-    var spyIndex = Math.floor(Math.random() * players.count());
+    var fakeArtistIndex = Math.floor(Math.random() * players.count());
     var firstPlayerIndex = Math.floor(Math.random() * players.count());
 
     players.forEach(function(player, index){
       Players.update(player._id, {$set: {
-        isSpy: index === spyIndex,
+        isFakeArtist: index === fakeArtistIndex,
         isFirstPlayer: index === firstPlayerIndex
       }});
     });

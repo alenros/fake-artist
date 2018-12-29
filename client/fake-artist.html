@@ -133,7 +133,7 @@
     <button class="btn-toggle-status">{{_ "ui.show hide" }}</button>
 	<table>
 	<tr><td class="status-container-content">
-	{{#if player.isSpy }}
+	{{#if player.isFakeArtist }}
 		<img src="/img/fake-artist.png" width=80px height=80px>
 	{{else}}
 		<img src="/img/real-artist.png" width=80px height=80px>
@@ -142,9 +142,9 @@
 	<td>
     <div class="status-container-content">
 
-      {{#if player.isSpy }}
+      {{#if player.isFakeArtist }}
 	
-        <div class="player-status player-status-spy"> {{_ "ui.you are the fake artist" }}</div>
+        <div class="player-status player-status-fake-artist"> {{_ "ui.you are the fake artist" }}</div>
         <div class="current-role">
           <div class="current-role-header">
             {{_ "ui.your category" }}:
@@ -155,7 +155,7 @@
         </div>
       {{else}}
 	
-        <div class="player-status player-status-not-spy">{{{_ "ui.you are not the fake artist" }}}</div>
+        <div class="player-status player-status-not-fake-artist">{{{_ "ui.you are not the fake artist" }}}</div>
 
         <div class="current-word">
           <div class="current-word-header">
