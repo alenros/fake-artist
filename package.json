@@ -1,11 +1,15 @@
 {
-  "name": "meteor-spyfall",
+  "name": "meteor-fakeartist",
   "private": true,
   "scripts": {
     "start": "meteor run"
   },
   "dependencies": {
+    "@babel/runtime": "^7.2.0",
     "babel-runtime": "^6.26.0",
-    "meteor-node-stubs": "~0.2.4"
+    "inherits": "^2.0.3",
+    "meteor-node-stubs": "~0.2.4",
+    "process-nextick-args": "^2.0.0",
+    "readable-stream": "^3.1.1"
   }
 }
