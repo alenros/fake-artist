@@ -9,6 +9,25 @@
   <link rel="stylesheet" href="css/normalize.css" type="text/css">
   <link rel="stylesheet" href="css/skeleton.css" type="text/css">
   <link rel="stylesheet" href="css/styles.css" type="text/css">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="msapplication-TileColor" content="#e4007f">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+  <meta name="theme-color" content="#e4007f">
+
 </head>
 
 <body></body>
@@ -29,10 +48,7 @@
   <div class="main-menu">
     <h4>{{_ "ui.welcome to fake artist" }}</h4>
 	<img src="/img/{{_ "ui.logo-file"}}">
-
     <hr>
-	
-
     <div class="button-container">
 
       <button id="btn-new-game">{{_ "ui.new game" }}</button>
@@ -100,9 +116,9 @@
 </td><td>
 <div>
 	<input type="text" id="user-word" name="userWord" placeholder='{{_ "ui.enter word" }}'>
-	<input type="text" id="user-category" name="userCategory" placeholder='{{_ "ui.enter category" }}'>
+  <input type="text" id="user-category" name="userCategory" placeholder='{{_ "ui.enter category" }}'>
 <BR>
-	<button class="btn-submit-user-word">{{_ "ui.submit user word" }}</button>
+	<button class="btn-submit-user-word" data-player-id="{{ player._id}}">{{_ "ui.submit user word" }}</button>
 </div>	
 </td>
 </tr>
@@ -134,17 +150,19 @@
 	<table>
 	<tr><td class="status-container-content">
 	{{#if player.isFakeArtist }}
-		<img src="/img/fake-artist.png" width=80px height=80px>
-	{{else}}
-		<img src="/img/real-artist.png" width=80px height=80px>
+  <img src="/img/fake-artist.png" width=80px height=80px>
+  {{else }}
+    {{#if player.isQuestionMaster }}
+      <img src="/img/presentor.png" width=80px height=80px>
+    {{else }}
+      <img src="/img/real-artist.png" width=80px height=80px>
+    {{/if}}
 	{{/if}}
 	</td>
 	<td>
     <div class="status-container-content">
-
       {{#if player.isFakeArtist }}
-	
-        <div class="player-status player-status-fake-artist"> {{_ "ui.you are the fake artist" }}</div>
+	        <div class="player-status player-status-fake-artist"> {{_ "ui.you are the fake artist" }}</div>
         <div class="current-role">
           <div class="current-role-header">
             {{_ "ui.your category" }}:
@@ -154,8 +172,11 @@
           </div>
         </div>
       {{else}}
-	
-        <div class="player-status player-status-not-fake-artist">{{{_ "ui.you are not the fake artist" }}}</div>
+        {{#if player.isQuestionMaster }}
+          <div class="player-status player-status-question-master">{{{_ "ui.you are the question master" }}}</div>
+        {{else}}
+          <div class="player-status player-status-not-fake-artist">{{{_ "ui.you are not the fake artist" }}}</div>
+        {{/if}}
 
         <div class="current-word">
           <div class="current-word-header">
