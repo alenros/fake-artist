@@ -126,6 +126,7 @@ function generateNewPlayer(game, name){
     gameID: game._id,
     name: name,
     category: null,
+    isQuestionMaster: false,
     isFakeArtist: false,
     isFirstPlayer: false
   };
@@ -157,12 +158,6 @@ function shuffleArray(array) {
         array[j] = temp;
     }
     return array;
-}
-
-function assignCategory(players, word, category){
-  players.forEach(function(player){
-      Players.update(player._id, {$set: {category: category}});
-  });
 }
 
 function resetUserState(){
@@ -429,25 +424,41 @@ Template.lobby.helpers({
 
 Template.lobby.events({
   'click .btn-leave': leaveGame,
-	'click .btn-submit-user-word': function(){
+	'click .btn-submit-user-word': function(event){
     var game = getCurrentGame();
     var word = document.getElementById("user-word").value;
     var category = document.getElementById("user-category").value;
+    var questionMasterId = $(event.currentTarget).data('player-id');
+    var questionMaster = Players.findOne({_id: questionMasterId});
+    var players = Array.from(Players.find({gameID: game._id},{_id:{$ne:questionMasterId}}));
+    players = players.filter(p=>p._id != questionMasterId);
+    var localEndTime = moment().add(game.lengthInMinutes, 'minutes');
+    var gameEndTime = TimeSync.serverTime(localEndTime);
+    
+    var fakeArtistIndex = Math.floor(Math.random() * players.length);
+    var firstPlayerIndex = Math.floor(Math.random() * players.length);
 
-      var players = Players.find({gameID: game._id});
-      var localEndTime = moment().add(game.lengthInMinutes, 'minutes');
-      var gameEndTime = TimeSync.serverTime(localEndTime);
-  
-      var fakeArtistIndex = Math.floor(Math.random() * players.count());
-      var firstPlayerIndex = Math.floor(Math.random() * players.count());
-  
-      players.forEach(function(player, index){
-        Players.update(player._id, {$set: {
-          isFakeArtist: index === fakeArtistIndex,
-          isFirstPlayer: index === firstPlayerIndex
-        }});
+    players.forEach(function(player, index){
+      console.log("updating " + player.name);
+      Players.update(player._id, {$set: {
+        isQuestionMaster: false,
+        isFakeArtist: index === fakeArtistIndex,
+        isFirstPlayer: index === firstPlayerIndex
+      }});
+    });
+
+    Players.update(questionMasterId, {$set: {
+      isQuestionMaster: true,
+      isFakeArtist: false,
+      isFirstPlayer: false
+    }});
+
+      players.forEach(function(player){
+        Players.update(player._id, {$set: {category: category}});
       });
-      assignCategory(players, word, category);
+
+      Players.update(questionMasterId, {$set: {category: category}});
+
       var wordAndCategory = {
         text:word,category:category
       }
@@ -466,13 +477,16 @@ Template.lobby.events({
 
     players.forEach(function(player, index){
       Players.update(player._id, {$set: {
+        isQuestionMaster: false,
         isFakeArtist: index === fakeArtistIndex,
         isFirstPlayer: index === firstPlayerIndex
       }});
     });
 
-    assignCategory(players, wordAndCategory.name ,wordAndCategory.category);
-    
+    players.forEach(function(player){
+      Players.update(player._id, {$set: {category: category}});
+    });
+
     Games.update(game._id, {$set: {state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null}});
   },
   'click .btn-toggle-qrcode': function () {
