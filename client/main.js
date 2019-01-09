@@ -484,7 +484,7 @@ Template.lobby.events({
     });
 
     players.forEach(function(player){
-      Players.update(player._id, {$set: {category: category}});
+      Players.update(player._id, {$set: {category: wordAndCategory.category}});
     });
 
     Games.update(game._id, {$set: {state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null}});
