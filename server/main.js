@@ -1,11 +1,11 @@
 function cleanUpGamesAndPlayers(){
-  var cutOff = moment().subtract(2, 'hours').toDate().getTime();
+  let cutOff = moment().subtract(2, 'hours').toDate().getTime();
 
-  var numGamesRemoved = Games.remove({
+  Games.remove({
     createdAt: {$lt: cutOff}
   });
 
-  var numPlayersRemoved = Players.remove({
+  Players.remove({
     createdAt: {$lt: cutOff}
   });
 }
@@ -16,7 +16,7 @@ Meteor.startup(function () {
   Players.remove({});
 });
 
-var MyCron = new Cron(60000);
+let MyCron = new Cron(60000);
 
 MyCron.addJob(5, cleanUpGamesAndPlayers);
 
