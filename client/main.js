@@ -203,6 +203,8 @@ function leaveGame () {
   Session.set("playerID", null);
 }
 
+function reportWordOrCategory()
+
 function hasHistoryApi () {
   return !!(window.history && window.history.pushState);
 }
@@ -420,6 +422,8 @@ Template.lobby.helpers({
   }
 });
 
+
+
 Template.lobby.events({
   'click .btn-leave': leaveGame,
 	'click .btn-submit-user-word': function(event){
@@ -514,6 +518,42 @@ Template.lobby.events({
     resetUserState();
     Session.set('urlAccessCode', game.accessCode);
     Session.set('currentView', 'joinGame');
+  },
+  'click .btn-bad-category': function () {
+    console.log('got a bad category');
+    console.log('game.wordAndCategory.category');
+    // (function(name,path,ctx){ctx[name]=ctx[name]||{ready:function(fn){var h=document.getElementsByTagName('head')[0],s=document.createElement('script'),w=window,loaded;s.onload=s.onerror=s.onreadystatechange=function(){if((s.readyState&&!(/^c|loade/.test(s.readyState)))||loaded){return}s.onload=s.onreadystatechange=null;loaded=1;ctx[name].ready(fn)};s.async=1;s.src=path;h.parentNode.insertBefore(s,h)}}})
+    // ('KeenTracking', 'https://cdn.jsdelivr.net/npm/keen-tracking@4/dist/keen-tracking.min.js', this);
+  
+    // KeenTracking.ready(function(){
+    //   const client = new KeenTracking({
+    //     projectId: '5c306025c9e77c00012189f5',
+    //     writeKey: 'D69FDEF8CBAD4CFA6234A28102073F0D10A887D8AA9561290869E5C05C1C152CD2693229CBBBB72B137503AAF32715D3C418002C0B90432060DD63BA3B4FF3FC272E4F9FDCBA5E92CAA8BB37C99BDF99F0F3A6FE4CAF321C81590AC3AFBD182C'
+    //   });
+  
+    // client.recordEvent('bad_categories', {
+    //     user_word: game.wordAndCategory.text,
+    //     user_category: game.wordAndCategory.category
+    //   });
+    // });
+  },
+  'click .btn-bad-word': function () {
+    console.log('got a bad word');
+    console.log('game.wordAndCategory.text');
+    // (function(name,path,ctx){ctx[name]=ctx[name]||{ready:function(fn){var h=document.getElementsByTagName('head')[0],s=document.createElement('script'),w=window,loaded;s.onload=s.onerror=s.onreadystatechange=function(){if((s.readyState&&!(/^c|loade/.test(s.readyState)))||loaded){return}s.onload=s.onreadystatechange=null;loaded=1;ctx[name].ready(fn)};s.async=1;s.src=path;h.parentNode.insertBefore(s,h)}}})
+    // ('KeenTracking', 'https://cdn.jsdelivr.net/npm/keen-tracking@4/dist/keen-tracking.min.js', this);
+  
+    // KeenTracking.ready(function(){
+    //   const client = new KeenTracking({
+    //     projectId: '5c306025c9e77c00012189f5',
+    //     writeKey: 'D69FDEF8CBAD4CFA6234A28102073F0D10A887D8AA9561290869E5C05C1C152CD2693229CBBBB72B137503AAF32715D3C418002C0B90432060DD63BA3B4FF3FC272E4F9FDCBA5E92CAA8BB37C99BDF99F0F3A6FE4CAF321C81590AC3AFBD182C'
+    //   });
+  
+    // client.recordEvent('bad_word', {
+    //     user_word: game.wordAndCategory.text,
+    //     user_category: game.wordAndCategory.category
+    //   });
+    // });
   }
 });
 
