@@ -177,14 +177,13 @@
 	<td>
     <div class="status-container-content">
       {{#if player.isFakeArtist }}
-	        <div class="player-status player-status-fake-artist"> {{_ "ui.you are the fake artist" }}</div>
+        <div class="player-status player-status-fake-artist"> {{_ "ui.you are the fake artist" }}</div>
         <div class="current-role">
           <div class="current-role-header">
             {{_ "ui.your category" }}:
           </div>
           <div class="current-role-name">
             <strong>{{_ player.category }}</strong>
-            <a style="color:red;"> <i class="fas fa-exclamation"></i> {{_ "ui.bad category" }}</div>
           </div>
         </div>
       {{else}}
@@ -201,8 +200,7 @@
           <div class="current-word-text">
             <strong>{{_ game.word.text }}</strong>
           </div>
-            <a style="color:red;"><i class="fas fa-exclamation"></i> {{_ "ui.bad word" }}</div>
-          </div>
+        </div>
 
         <div class="current-category">
           <div class="current-category-header">
@@ -211,12 +209,11 @@
           <div class="current-category-text">
             {{_ player.category }}
           </div>
-            <a style="color:red;"><i class="fas fa-exclamation"></i> {{_ "ui.bad category" }}</div>
         </div>
       {{/if}}
     </div>
-</td>
-</tr>
+    </td>
+  </tr>
 </table>
   </div>
 

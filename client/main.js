@@ -138,8 +138,8 @@ function getRandomWordAndCategory(){
 
 	if(getUserLanguage()=="he")
 	{
-	let wordIndex = Math.floor(Math.random() * words_he.length);
-	return words_he[wordIndex];
+	  let wordIndex = Math.floor(Math.random() * words_he.length);
+	  return words_he[wordIndex];
 	}
 	else
 	{
@@ -202,8 +202,6 @@ function leaveGame () {
 
   Session.set("playerID", null);
 }
-
-function reportWordOrCategory()
 
 function hasHistoryApi () {
   return !!(window.history && window.history.pushState);
