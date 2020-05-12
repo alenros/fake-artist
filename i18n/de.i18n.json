@@ -1,0 +1,43 @@
+{
+    "ui": {
+        "welcome to fake artist": "Ein falscher Künstler in New York",
+        "try insider":"Try the new Insider game",
+        "new game": "Neues Spiel",
+        "join game": "Einem Spiel beitreten",
+        "waiting for players": "Auf Spieler warten...",
+        "access code": "Zugangscode erhalten",
+        "join my game": "Tritt meinem Spiel bei!",
+        "start game": "Spiel starten",
+        "leave game": "Spiel verlassen",
+        "show hide": "zeigen/verstecken",
+        "you are the fake artist": "Du bist der falsche Künstler!",
+        "you are not the fake artist": "Du bist <strong>nicht</strong> der falsche Künstler!",
+        "you are the question master": "Du bist der Fragenmeister!",
+        "the word": "Das Wort",
+        "your category": "Die Kategorie",
+        "players": "Spieler",
+        "first": "1.",
+        "words reference": "Wort Referenz",
+        "end game": "Spiel beenden",
+        "enter your name": "Deinen Namen eingeben",
+        "create game": "Erstellen",
+        "back": "zurück",
+        "enter an access code": "Zugangscode eingeben",
+        "invalid access code": "Entschuldigung, es wurde kein Spiel mit diesem Zugangscode gefunden!",
+        "join": "Beitreten",
+        "footer": "Application based on the Spyfall meteor application.",
+	"credits": "Game published by ",
+	"Author": "Found a Bug? got a Suggestion? send me a PM on BGG: ",
+	"logo-file": "logo-en.png",
+	"locations-file":"locations_en",
+	"enter word":"Gib dein Wort ein",
+	"enter category":"Gib die Kategorie für dein Wort ein",
+	"submit user word":"Dieses Wort benutzen!",
+	"choose own word":"Benutze dein eigenes Wort!",
+	"let us choose":"Oder lass uns ein Wort für dich aussuchen!",
+	"bad category":"report category",
+    "bad word":"report word"
+    }
+}
+
+
