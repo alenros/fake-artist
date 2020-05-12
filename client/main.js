@@ -135,17 +135,25 @@ function generateNewPlayer(game, name){
 }
 
 function getRandomWordAndCategory(){
+  let words =[];
+  
+  //getWordsProvider();
 
-	if(getUserLanguage()=="he")
-	{
-	  let wordIndex = Math.floor(Math.random() * words_he.length);
-	  return words_he[wordIndex];
-	}
-	else
-	{
-	  let wordIndex = Math.floor(Math.random() * words_en.length);
-	  return words_en[wordIndex];
-	}
+  switch(getUserLanguage()) {
+    case "he":
+      words = words_he;
+      break;
+    case "en":
+      words = words_en;
+      break;
+    default:
+      words = words_en;
+      break;
+  };
+
+  let wordIndex = Math.floor(Math.random() * words.length);
+
+  return words[wordIndex];
 }
 
 function shuffleArray(array) {
