@@ -1,11 +1,11 @@
-﻿Handlebars.registerHelper('toCapitalCase', function(str) {
+﻿Handlebars.registerHelper('toCapitalCase', function (str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 });
 
 function initUserLanguage() {
   let language = amplify.store("language");
 
-  if (language){
+  if (language) {
     Session.set("language", language);
   }
 
@@ -15,7 +15,7 @@ function initUserLanguage() {
 function getUserLanguage() {
   let language = Session.get("language");
 
-  if (language){
+  if (language) {
     return language;
   } else {
     return "en";
@@ -42,17 +42,17 @@ function getLanguageDirection() {
 
 function getLanguageList() {
   let languages = TAPi18n.getLanguages();
-  let languageList = _.map(languages, function(value, key) {
+  let languageList = _.map(languages, function (value, key) {
     let selected = "";
-    
-    if (key == getUserLanguage()){
+
+    if (key == getUserLanguage()) {
       selected = "selected";
     }
 
     // Gujarati isn't handled automatically by tap-i18n,
     // so we need to set the language name manually
-    if (value.name == "gu"){
-        value.name = "ગુજરાતી";
+    if (value.name == "gu") {
+      value.name = "ગુજરાતી";
     }
 
     return {
@@ -61,15 +61,15 @@ function getLanguageList() {
       languageDetails: value
     };
   });
-  
-  if (languageList.length <= 1){
+
+  if (languageList.length <= 1) {
     return null;
   }
-  
+
   return languageList;
 }
 
-function getCurrentGame(){
+function getCurrentGame() {
   let gameID = Session.get("gameID");
 
   if (gameID) {
@@ -77,10 +77,10 @@ function getCurrentGame(){
   }
 }
 
-function getAccessLink(){
+function getAccessLink() {
   let game = getCurrentGame();
 
-  if (!game){
+  if (!game) {
     return;
   }
 
@@ -88,7 +88,7 @@ function getAccessLink(){
 }
 
 
-function getCurrentPlayer(){
+function getCurrentPlayer() {
   let playerID = Session.get("playerID");
 
   if (playerID) {
@@ -108,7 +108,7 @@ function generateAccessCode() {
   return accessCode;
 }
 
-function generateNewGame(){
+function generateNewGame() {
   let game = {
     accessCode: generateAccessCode(),
     state: "waitingForPlayers",
@@ -125,7 +125,7 @@ function generateNewGame(){
   return game;
 }
 
-function generateNewPlayer(game, name){
+function generateNewPlayer(game, name) {
   let player = {
     gameID: game._id,
     name: name,
@@ -140,12 +140,12 @@ function generateNewPlayer(game, name){
   return Players.findOne(playerID);
 }
 
-function getRandomWordAndCategory(){
-  let words =[];
-  
+function getRandomWordAndCategory() {
+  let words = [];
+
   //getWordsProvider();
 
-  switch(getUserLanguage()) {
+  switch (getUserLanguage()) {
     case "he":
       words = words_he;
       break;
@@ -163,19 +163,19 @@ function getRandomWordAndCategory(){
 }
 
 function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        let temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
-    return array;
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    let temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
 }
 
-function resetUserState(){
+function resetUserState() {
   let player = getCurrentPlayer();
 
-  if (player){
+  if (player) {
     Players.remove(player._id);
   }
 
@@ -183,32 +183,32 @@ function resetUserState(){
   Session.set("playerID", null);
 }
 
-function trackGameState () {
+function trackGameState() {
   let gameID = Session.get("gameID");
   let playerID = Session.get("playerID");
 
-  if (!gameID || !playerID){
+  if (!gameID || !playerID) {
     return;
   }
 
   let game = Games.findOne(gameID);
   let player = Players.findOne(playerID);
 
-  if (!game || !player){
+  if (!game || !player) {
     Session.set("gameID", null);
     Session.set("playerID", null);
     Session.set("currentView", "startMenu");
     return;
   }
 
-  if(game.state === "inProgress"){
+  if (game.state === "inProgress") {
     Session.set("currentView", "gameView");
   } else if (game.state === "waitingForPlayers") {
     Session.set("currentView", "lobby");
   }
 }
 
-function leaveGame () {  
+function leaveGame() {
   let player = getCurrentPlayer();
 
   Session.set("currentView", "startMenu");
@@ -217,7 +217,7 @@ function leaveGame () {
   Session.set("playerID", null);
 }
 
-function hasHistoryApi () {
+function hasHistoryApi() {
   return !!(window.history && window.history.pushState);
 }
 
@@ -227,19 +227,19 @@ Meteor.setInterval(function () {
   Session.set('time', new Date());
 }, 1000);
 
-if (hasHistoryApi()){
-  function trackUrlState () {
+if (hasHistoryApi()) {
+  function trackUrlState() {
     let accessCode = null;
     let game = getCurrentGame();
-    if (game){
+    if (game) {
       accessCode = game.accessCode;
     } else {
       accessCode = Session.get('urlAccessCode');
     }
-    
+
     let currentURL = '/';
-    if (accessCode){
-      currentURL += accessCode+'/';
+    if (accessCode) {
+      currentURL += accessCode + '/';
     }
     window.history.pushState(null, null, currentURL);
   }
@@ -253,13 +253,13 @@ FlashMessages.configure({
 });
 
 Template.main.helpers({
-  whichView: function() {
+  whichView: function () {
     return Session.get('currentView');
   },
-  language: function() {
+  language: function () {
     return getUserLanguage();
   },
-  textDirection: function() {
+  textDirection: function () {
     return getLanguageDirection();
   }
 });
@@ -289,7 +289,7 @@ Template.startMenu.events({
 });
 
 Template.startMenu.helpers({
-  alternativeURL: function() {
+  alternativeURL: function () {
     return Meteor.settings.public.alternative;
   }
 });
@@ -313,8 +313,8 @@ Template.createGame.events({
     Meteor.subscribe('games', game.accessCode);
 
     Session.set("loading", true);
-    
-    Meteor.subscribe('players', game._id, function onReady(){
+
+    Meteor.subscribe('players', game._id, function onReady() {
       Session.set("loading", false);
 
       Session.set("gameID", game._id);
@@ -331,7 +331,7 @@ Template.createGame.events({
 });
 
 Template.createGame.helpers({
-  isLoading: function() {
+  isLoading: function () {
     return Session.get('loading');
   }
 });
@@ -354,7 +354,7 @@ Template.joinGame.events({
 
     Session.set("loading", true);
 
-    Meteor.subscribe('games', accessCode, function onReady(){
+    Meteor.subscribe('games', accessCode, function onReady() {
       Session.set("loading", false);
 
       let game = Games.findOne({
@@ -364,7 +364,7 @@ Template.joinGame.events({
       if (game) {
         Meteor.subscribe('players', game._id);
         let player = generateNewPlayer(game, playerName);
-        
+
         Session.set('urlAccessCode', null);
         Session.set("gameID", game._id);
         Session.set("playerID", player._id);
@@ -384,7 +384,7 @@ Template.joinGame.events({
 });
 
 Template.joinGame.helpers({
-  isLoading: function() {
+  isLoading: function () {
     return Session.get('loading');
   }
 });
@@ -395,7 +395,7 @@ Template.joinGame.rendered = function (event) {
 
   let urlAccessCode = Session.get('urlAccessCode');
 
-  if (urlAccessCode){
+  if (urlAccessCode) {
     $("#access-code").val(urlAccessCode);
     $("#access-code").hide();
     $("#player-name").focus();
@@ -422,10 +422,10 @@ Template.lobby.helpers({
       return null;
     }
 
-    let players = Players.find({'gameID': game._id}, {'sort': {'createdAt': 1}}).fetch();
+    let players = Players.find({ 'gameID': game._id }, { 'sort': { 'createdAt': 1 } }).fetch();
 
-    players.forEach(function(player){
-      if (player._id === currentPlayer._id){
+    players.forEach(function (player) {
+      if (player._id === currentPlayer._id) {
         player.isCurrent = true;
       }
     });
@@ -438,89 +438,94 @@ Template.lobby.helpers({
 
 Template.lobby.events({
   'click .btn-leave': leaveGame,
-	'click .btn-submit-user-word': function(event){
+  'click .btn-submit-user-word': function (event) {
     let game = getCurrentGame();
     let word = document.getElementById("user-word").value;
     let category = document.getElementById("user-category").value;
-    if(word.length == 0 || category.length == 0)
-    {
+    if (word.length == 0 || category.length == 0) {
       return;
     }
 
-    (function(name,path,ctx){ctx[name]=ctx[name]||{ready:function(fn){let h=document.getElementsByTagName('head')[0],s=document.createElement('script'),w=window,loaded;s.onload=s.onerror=s.onreadystatechange=function(){if((s.readyState&&!(/^c|loade/.test(s.readyState)))||loaded){return}s.onload=s.onreadystatechange=null;loaded=1;ctx[name].ready(fn)};s.async=1;s.src=path;h.parentNode.insertBefore(s,h)}}})
-    ('KeenTracking', 'https://cdn.jsdelivr.net/npm/keen-tracking@4/dist/keen-tracking.min.js', this);
-  
-    KeenTracking.ready(function(){
+    (function (name, path, ctx) { ctx[name] = ctx[name] || { ready: function (fn) { let h = document.getElementsByTagName('head')[0], s = document.createElement('script'), w = window, loaded; s.onload = s.onerror = s.onreadystatechange = function () { if ((s.readyState && !(/^c|loade/.test(s.readyState))) || loaded) { return } s.onload = s.onreadystatechange = null; loaded = 1; ctx[name].ready(fn) }; s.async = 1; s.src = path; h.parentNode.insertBefore(s, h) } } })
+      ('KeenTracking', 'https://cdn.jsdelivr.net/npm/keen-tracking@4/dist/keen-tracking.min.js', this);
+
+    KeenTracking.ready(function () {
       const client = new KeenTracking({
         projectId: '5c306025c9e77c00012189f5',
         writeKey: 'D69FDEF8CBAD4CFA6234A28102073F0D10A887D8AA9561290869E5C05C1C152CD2693229CBBBB72B137503AAF32715D3C418002C0B90432060DD63BA3B4FF3FC272E4F9FDCBA5E92CAA8BB37C99BDF99F0F3A6FE4CAF321C81590AC3AFBD182C'
       });
-  
-    client.recordEvent('user_words', {
+
+      client.recordEvent('user_words', {
         user_word: word,
         user_category: category
       });
     });
 
     let questionMasterId = $(event.currentTarget).data('player-id');
-    let players = Array.from(Players.find({gameID: game._id},{_id:{$ne:questionMasterId}}));
-    players = players.filter(p=>p._id != questionMasterId);
+    let players = Array.from(Players.find({ gameID: game._id }, { _id: { $ne: questionMasterId } }));
+    players = players.filter(p => p._id != questionMasterId);
     let localEndTime = moment().add(game.lengthInMinutes, 'minutes');
     let gameEndTime = TimeSync.serverTime(localEndTime);
-    
+
     let fakeArtistIndex = Math.floor(Math.random() * players.length);
     let firstPlayerIndex = Math.floor(Math.random() * players.length);
 
-    players.forEach(function(player, index){
+    players.forEach(function (player, index) {
       console.log("updating " + player.name);
-      Players.update(player._id, {$set: {
-        isQuestionMaster: false,
-        isFakeArtist: index === fakeArtistIndex,
-        isFirstPlayer: index === firstPlayerIndex
-      }});
+      Players.update(player._id, {
+        $set: {
+          isQuestionMaster: false,
+          isFakeArtist: index === fakeArtistIndex,
+          isFirstPlayer: index === firstPlayerIndex
+        }
+      });
     });
 
-    Players.update(questionMasterId, {$set: {
-      isQuestionMaster: true,
-      isFakeArtist: false,
-      isFirstPlayer: false
-    }});
+    Players.update(questionMasterId, {
+      $set: {
+        isQuestionMaster: true,
+        isFakeArtist: false,
+        isFirstPlayer: false
+      }
+    });
 
-      players.forEach(function(player){
-        Players.update(player._id, {$set: {category: category}});
-      });
+    players.forEach(function (player) {
+      Players.update(player._id, { $set: { category: category } });
+    });
 
-      Players.update(questionMasterId, {$set: {category: category}});
+    Players.update(questionMasterId, { $set: { category: category } });
 
-      let wordAndCategory = {
-        text:word,category:category
-      };
-      Games.update(game._id, {$set: {state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null}});
-    },										  
+    let wordAndCategory = {
+      text: word, category: category
+    };
+    Games.update(game._id, { $set: { state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null } });
+  },
   'click .btn-start': function () {
 
     let game = getCurrentGame();
     let wordAndCategory = getRandomWordAndCategory();
-    let players = Players.find({gameID: game._id});
+    let players = Players.find({ gameID: game._id });
     let localEndTime = moment().add(game.lengthInMinutes, 'minutes');
     let gameEndTime = TimeSync.serverTime(localEndTime);
 
     let fakeArtistIndex = Math.floor(Math.random() * players.count());
     let firstPlayerIndex = Math.floor(Math.random() * players.count());
 
-    players.forEach(function(player, index){
-      Players.update(player._id, {$set: {
-        isQuestionMaster: false,
-        isFakeArtist: index === fakeArtistIndex,
-        isFirstPlayer: index === firstPlayerIndex
-      }});
+    players.forEach(function (player, index) {
+      Players.update(player._id, {
+        $set: {
+          isQuestionMaster: false,
+          isFakeArtist: index === fakeArtistIndex,
+          isFirstPlayer: index === firstPlayerIndex
+        }
+      });
     });
 
-    players.forEach(function(player){
-      Players.update(player._id, {$set: {category: wordAndCategory.category}});
+    players.forEach(function (player) {
+      Players.update(player._id, { $set: { category: wordAndCategory.category } });
     });
 
-    Games.update(game._id, {$set: {state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null}});
+    Games.update(game._id, { $set: { state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null } });
   },
   'click .btn-toggle-qrcode': function () {
     $(".qrcode-container").toggle();
@@ -540,13 +545,13 @@ Template.lobby.events({
     console.log('game.wordAndCategory.category');
     // (function(name,path,ctx){ctx[name]=ctx[name]||{ready:function(fn){var h=document.getElementsByTagName('head')[0],s=document.createElement('script'),w=window,loaded;s.onload=s.onerror=s.onreadystatechange=function(){if((s.readyState&&!(/^c|loade/.test(s.readyState)))||loaded){return}s.onload=s.onreadystatechange=null;loaded=1;ctx[name].ready(fn)};s.async=1;s.src=path;h.parentNode.insertBefore(s,h)}}})
     // ('KeenTracking', 'https://cdn.jsdelivr.net/npm/keen-tracking@4/dist/keen-tracking.min.js', this);
-  
+
     // KeenTracking.ready(function(){
     //   const client = new KeenTracking({
     //     projectId: '5c306025c9e77c00012189f5',
     //     writeKey: 'D69FDEF8CBAD4CFA6234A28102073F0D10A887D8AA9561290869E5C05C1C152CD2693229CBBBB72B137503AAF32715D3C418002C0B90432060DD63BA3B4FF3FC272E4F9FDCBA5E92CAA8BB37C99BDF99F0F3A6FE4CAF321C81590AC3AFBD182C'
     //   });
-  
+
     // client.recordEvent('bad_categories', {
     //     user_word: game.wordAndCategory.text,
     //     user_category: game.wordAndCategory.category
@@ -558,13 +563,13 @@ Template.lobby.events({
     console.log('game.wordAndCategory.text');
     // (function(name,path,ctx){ctx[name]=ctx[name]||{ready:function(fn){var h=document.getElementsByTagName('head')[0],s=document.createElement('script'),w=window,loaded;s.onload=s.onerror=s.onreadystatechange=function(){if((s.readyState&&!(/^c|loade/.test(s.readyState)))||loaded){return}s.onload=s.onreadystatechange=null;loaded=1;ctx[name].ready(fn)};s.async=1;s.src=path;h.parentNode.insertBefore(s,h)}}})
     // ('KeenTracking', 'https://cdn.jsdelivr.net/npm/keen-tracking@4/dist/keen-tracking.min.js', this);
-  
+
     // KeenTracking.ready(function(){
     //   const client = new KeenTracking({
     //     projectId: '5c306025c9e77c00012189f5',
     //     writeKey: 'D69FDEF8CBAD4CFA6234A28102073F0D10A887D8AA9561290869E5C05C1C152CD2693229CBBBB72B137503AAF32715D3C418002C0B90432060DD63BA3B4FF3FC272E4F9FDCBA5E92CAA8BB37C99BDF99F0F3A6FE4CAF321C81590AC3AFBD182C'
     //   });
-  
+
     // client.recordEvent('bad_word', {
     //     user_word: game.wordAndCategory.text,
     //     user_category: game.wordAndCategory.category
@@ -575,16 +580,16 @@ Template.lobby.events({
 
 Template.lobby.rendered = function (event) {
   let url = getAccessLink();
-  url = "https://fake-artist.herokuapp.com/"+url;
+  url = "https://fake-artist.herokuapp.com/" + url;
   let qrcodesvg = new Qrcodesvg(url, "qrcode", 250);
   qrcodesvg.draw();
 };
 
-function getTimeRemaining(){
+function getTimeRemaining() {
   let game = getCurrentGame();
   let localEndTime = game.endTime - TimeSync.serverOffset();
 
-  if (game.paused){
+  if (game.paused) {
     let localPausedTime = game.pausedTime - TimeSync.serverOffset();
     let timeRemaining = localEndTime - localPausedTime;
   } else {
@@ -603,8 +608,8 @@ Template.gameView.helpers({
   player: getCurrentPlayer,
   players: function () {
     let game = getCurrentGame();
-    
-    if (!game){
+
+    if (!game) {
       return null;
     }
 
@@ -633,7 +638,7 @@ Template.gameView.events({
   'click .btn-leave': leaveGame,
   'click .btn-end': function () {
     let game = getCurrentGame();
-    Games.update(game._id, {$set: {state: 'waitingForPlayers'}});
+    Games.update(game._id, { $set: { state: 'waitingForPlayers' } });
   },
   'click .btn-toggle-status': function () {
     $(".status-container-content").toggle();
@@ -642,11 +647,11 @@ Template.gameView.events({
     let game = getCurrentGame();
     let currentServerTime = TimeSync.serverTime(moment());
 
-    if(game.paused){
+    if (game.paused) {
       let newEndTime = game.endTime - game.pausedTime + currentServerTime;
-      Games.update(game._id, {$set: {paused: false, pausedTime: null, endTime: newEndTime}});
+      Games.update(game._id, { $set: { paused: false, pausedTime: null, endTime: newEndTime } });
     } else {
-      Games.update(game._id, {$set: {paused: true, pausedTime: currentServerTime}});
+      Games.update(game._id, { $set: { paused: true, pausedTime: currentServerTime } });
     }
   }
 });
