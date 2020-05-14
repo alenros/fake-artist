@@ -40,6 +40,14 @@ function getLanguageDirection() {
   }
 }
 
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function getLanguageList() {
   let languages = TAPi18n.getLanguages();
   let languageList = _.map(languages, function (value, key) {
@@ -470,13 +478,24 @@ Template.lobby.events({
     let fakeArtistIndex = Math.floor(Math.random() * players.length);
     let firstPlayerIndex = Math.floor(Math.random() * players.length);
 
-    players.forEach(function (player, index) {
-      console.log("updating " + player.name);
+    let turnOrders = []
+
+
+    regularPlayers = players.filter(player => player._id != questionMasterId);
+
+    regularPlayers.forEach(function (player, index) {
+      turnOrders.push(index + 1);
+    });
+
+    turnOrders = shuffle(turnOrders);
+
+    regularPlayers.forEach(function (player, index) {
       Players.update(player._id, {
         $set: {
           isQuestionMaster: false,
           isFakeArtist: index === fakeArtistIndex,
-          isFirstPlayer: index === firstPlayerIndex
+          isFirstPlayer: index === firstPlayerIndex,
+          turnOrder: turnOrders[index]
         }
       });
     });
@@ -485,7 +504,7 @@ Template.lobby.events({
       $set: {
         isQuestionMaster: true,
         isFakeArtist: false,
-        isFirstPlayer: false
+        isFirstPlayer: false,
       }
     });
 
@@ -511,12 +530,23 @@ Template.lobby.events({
     let fakeArtistIndex = Math.floor(Math.random() * players.count());
     let firstPlayerIndex = Math.floor(Math.random() * players.count());
 
+    let turnOrders = []
+
+    let i = 0;
+    while (turnOrders.length < players.count()) {
+      turnOrders.push(i);
+      i = i + 1;
+    }
+
+    turnOrders = shuffle(turnOrders);
+
     players.forEach(function (player, index) {
       Players.update(player._id, {
         $set: {
           isQuestionMaster: false,
           isFakeArtist: index === fakeArtistIndex,
-          isFirstPlayer: index === firstPlayerIndex
+          isFirstPlayer: index === firstPlayerIndex,
+          turnOrder: turnOrders[index] + 1,
         }
       });
     });

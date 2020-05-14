@@ -225,8 +225,10 @@
       <li>
         <div class="player-name">
           {{ name }}
-          {{#if isFirstPlayer}}
-            <div class="first-player-indicator">{{{_ "ui.first" }}}</div>
+          {{#if isQuestionMaster }}
+            <div class="first-player-indicator">{{_ "ui.question master indicator" }}</div>
+          {{else}}
+            <div class="first-player-indicator">{{ turnOrder }}</div>
           {{/if}}
         </div>
       </li>
