@@ -618,12 +618,12 @@ Template.lobby.rendered = function (event) {
 function getTimeRemaining() {
   let game = getCurrentGame();
   let localEndTime = game.endTime - TimeSync.serverOffset();
-
+  let timeRemaining;
   if (game.paused) {
     let localPausedTime = game.pausedTime - TimeSync.serverOffset();
-    let timeRemaining = localEndTime - localPausedTime;
+    timeRemaining = localEndTime - localPausedTime;
   } else {
-    let timeRemaining = localEndTime - Session.get('time');
+    timeRemaining = localEndTime - Session.get('time');
   }
 
   if (timeRemaining < 0) {
