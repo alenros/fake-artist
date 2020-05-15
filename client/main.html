@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link href="https://fonts.googleapis.com/css?family=Alef|Oswald|Open+Sans" rel="stylesheet" async media="none" onload="if(media!='all')media='all'">
 
-  <script src="https://kit.fontawesome.com/d406d8af58.js" crossorigin="anonymous" async media="none" onload="if(media!='all')media='all'"></script>
   <link rel="stylesheet" href="css/normalize.css" type="text/html" async media="none" onload="if(media!='all')media='all'"> 
   <link rel="stylesheet" href="css/skeleton.css" type="text/html" async media="none" onload="if(media!='all')media='all'">
   <link rel="stylesheet" href="css/styles.css" type="text/html" async media="none" onload="if(media!='all')media='all'">
@@ -87,13 +86,13 @@
 
   <div class="access-buttons">
     <a class="access-button btn-toggle-qrcode" href="javascript:void(0);">
-      <i class="fa fa-qrcode"></i>
+      <img src="/icons/qrcode.svg" class="icon" />
     </a>
 
     <span class="access-button-separator"></span>
 
     <a class="access-button btn-send-access-code-email" href='mailto:?subject={{_ "ui.join my game" }}&body={{ accessLink }}'>
-      <i class="fa fa-envelope-o"></i>
+      <img src="/icons/envelope-open.svg" class="icon" />
     </a>
   </div>
 
@@ -114,11 +113,11 @@
 
         {{#if isCurrent }}
           <a href="#" class="btn-edit-player" data-player-id="{{ _id }}">
-            <i class="fa fa-pencil"></i>
+            <img src="/icons/pencil-alt.svg" class="icon"/>
           </a>
         {{else}}
           <a href="#" class="btn-remove-player" data-player-id="{{ _id }}">
-            <i class="fa fa-close"></i>
+            <img src="/icons/window-close.svg" class="icon"/>
           </a>
         {{/if}}
       </li>
