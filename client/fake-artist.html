@@ -3,12 +3,12 @@
   <title>A Fake Artist Goes to New York</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link href="https://fonts.googleapis.com/css?family=Alef|Oswald|Open+Sans" rel="stylesheet" async>
+  <link href="https://fonts.googleapis.com/css?family=Alef|Oswald|Open+Sans" rel="stylesheet" async media="none" onload="if(media!='all')media='all'">
 
-  <script src="https://kit.fontawesome.com/d406d8af58.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="css/normalize.css" type="text/html" async> 
-  <link rel="stylesheet" href="css/skeleton.css" type="text/html" async>
-  <link rel="stylesheet" href="css/styles.css" type="text/html" async>
+  <script src="https://kit.fontawesome.com/d406d8af58.js" crossorigin="anonymous" async media="none" onload="if(media!='all')media='all'"></script>
+  <link rel="stylesheet" href="css/normalize.css" type="text/html" async media="none" onload="if(media!='all')media='all'"> 
+  <link rel="stylesheet" href="css/skeleton.css" type="text/html" async media="none" onload="if(media!='all')media='all'">
+  <link rel="stylesheet" href="css/styles.css" type="text/html" async media="none" onload="if(media!='all')media='all'">
 
   <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
   <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
@@ -28,7 +28,7 @@
   <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
   <meta name="theme-color" content="#e4007f">
 
-  <script>
+  <script async>
     (function(name,path,ctx){ctx[name]=ctx[name]||{ready:function(fn){var h=document.getElementsByTagName('head')[0],s=document.createElement('script'),w=window,loaded;s.onload=s.onerror=s.onreadystatechange=function(){if((s.readyState&&!(/^c|loade/.test(s.readyState)))||loaded){return}s.onload=s.onreadystatechange=null;loaded=1;ctx[name].ready(fn)};s.async=1;s.src=path;h.parentNode.insertBefore(s,h)}}})
     ('KeenTracking', 'https://cdn.jsdelivr.net/npm/keen-tracking@4/dist/keen-tracking.min.js', this);
   
@@ -62,7 +62,7 @@
 <template name="startMenu">
   <div class="main-menu">
     <h4>{{_ "ui.welcome to fake artist" }}</h4>
-	<img src="/img/{{_ "ui.logo-file"}}">
+	<img src="/img/{{_ "ui.logo-file"}}" class="logo">
     <hr>
     <div class="button-container">
 
