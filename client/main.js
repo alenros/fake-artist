@@ -442,8 +442,6 @@ Template.lobby.helpers({
   }
 });
 
-
-
 Template.lobby.events({
   'click .btn-leave': leaveGame,
   'click .btn-submit-user-word': function (event) {
@@ -454,15 +452,11 @@ Template.lobby.events({
       return;
     }
     // Track words submittd by users
-   let userWord ={
-     word: word,
-     category: category,
-     language: Session.get("language")
-   };
-   UserWords.insert(userWord);
-
-
-
+    let userWord = {
+      word: word,
+      category: category,
+      language: Session.get("language")
+    };
 
     let questionMasterId = $(event.currentTarget).data('player-id');
     let players = Array.from(Players.find({ gameID: game._id }, { _id: { $ne: questionMasterId } }));
@@ -475,6 +469,15 @@ Template.lobby.events({
 
     let turnOrders = []
 
+    UserWords.insert(userWord);
+
+    // Track the language used for the game
+    let languageUsed = {
+      language: Session.get("language"),
+      playerCount: players.length
+    };
+
+    LanguagesUsed.insert(languageUsed);
 
     regularPlayers = players.filter(player => player._id != questionMasterId);
 
