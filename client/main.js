@@ -460,12 +460,13 @@ Template.lobby.events({
 
     let questionMasterId = $(event.currentTarget).data('player-id');
     let players = Array.from(Players.find({ gameID: game._id }, { _id: { $ne: questionMasterId } }));
-    players = players.filter(p => p._id != questionMasterId);
+    let regularPlayers = players.filter(player => player._id != questionMasterId);
+
     let localEndTime = moment().add(game.lengthInMinutes, 'minutes');
     let gameEndTime = TimeSync.serverTime(localEndTime);
 
-    let fakeArtistIndex = Math.floor(Math.random() * players.length);
-    let firstPlayerIndex = Math.floor(Math.random() * players.length);
+    let fakeArtistIndex = Math.floor(Math.random() * regularPlayers.length);
+    let firstPlayerIndex = Math.floor(Math.random() * regularPlayers.length);
 
     let turnOrders = []
 
@@ -478,8 +479,6 @@ Template.lobby.events({
     };
 
     LanguagesUsed.insert(languageUsed);
-
-    regularPlayers = players.filter(player => player._id != questionMasterId);
 
     regularPlayers.forEach(function (player, index) {
       turnOrders.push(index + 1);
@@ -527,6 +526,14 @@ Template.lobby.events({
 
     let fakeArtistIndex = Math.floor(Math.random() * players.count());
     let firstPlayerIndex = Math.floor(Math.random() * players.count());
+
+    // Track the language used for the game
+    let languageUsed = {
+      language: Session.get("language"),
+      playerCount: players.count()
+    };
+
+    LanguagesUsed.insert(languageUsed);
 
     let turnOrders = []
 
