@@ -26,6 +26,11 @@
   <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
   <meta name="theme-color" content="#e4007f">
 
+  <script>
+      !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+      posthog.init('LCy-zU8gQrMp8K75jpj3a89xC7to5FEZwQ_pUI1743U', {api_host: 'https://analytics-fake-artist.herokuapp.com'})
+    </script>
+    
 </head>
 
 <body></body>
@@ -127,7 +132,6 @@
 {{_ "ui.let us choose"}}
 </td>
 <td>
-
   
     <button class="btn-start">{{_ "ui.start game" }}</button>
 
@@ -139,6 +143,7 @@
 <div class="button-container">
     <button class="btn-leave">{{_ "ui.leave game" }}</button>
 </div>
+
 
 </template>
 
@@ -237,19 +242,6 @@
     <button class="btn-leave">{{_ "ui.leave game" }}</button>
   </div>
   
-  <script type="text/javascript">
-    var sc_project=11699336; 
-    var sc_invisible=1; 
-    var sc_security="0f5c66e9"; 
-    </script>
-    <script type="text/javascript"
-    src="https://www.statcounter.com/counter/counter.js"
-    async></script>
-    <noscript><div class="statcounter"><a title="Web Analytics"
-    href="http://statcounter.com/" target="_blank"><img
-    class="statcounter"
-    src="//c.statcounter.com/11699336/0/0f5c66e9/1/" alt="Web
-    Analytics"></a></div></noscript>
 </template>
 
 <template name="createGame">
