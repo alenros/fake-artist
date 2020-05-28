@@ -95,7 +95,6 @@ function getAccessLink() {
   return game.accessCode + "/";
 }
 
-
 function getCurrentPlayer() {
   let playerID = Session.get("playerID");
 
@@ -151,7 +150,7 @@ function generateNewPlayer(game, name) {
 function getRandomWordAndCategory() {
   let words = [];
 
-  //getWordsProvider();
+  // var lang = Session.get("language");
 
   switch (getUserLanguage()) {
     case "he":
@@ -324,7 +323,7 @@ Template.createGame.events({
 
     Meteor.subscribe('players', game._id, function onReady() {
       Session.set("loading", false);
-
+      Session.set("language", getUserLanguage());
       Session.set("gameID", game._id);
       Session.set("playerID", player._id);
       Session.set("currentView", "lobby");
@@ -474,6 +473,7 @@ Template.lobby.events({
 
     // Track the language used for the game
     let languageUsed = {
+      gameID: game._id,
       language: Session.get("language"),
       playerCount: players.length
     };
@@ -520,6 +520,7 @@ Template.lobby.events({
 
     let game = getCurrentGame();
     let wordAndCategory = getRandomWordAndCategory();
+
     let players = Players.find({ gameID: game._id });
     let localEndTime = moment().add(game.lengthInMinutes, 'minutes');
     let gameEndTime = TimeSync.serverTime(localEndTime);
@@ -529,6 +530,7 @@ Template.lobby.events({
 
     // Track the language used for the game
     let languageUsed = {
+      gameID: game._id,
       language: Session.get("language"),
       playerCount: players.count()
     };
