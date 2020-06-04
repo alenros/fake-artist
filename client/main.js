@@ -1,4 +1,7 @@
-﻿Handlebars.registerHelper('toCapitalCase', function (str) {
+﻿import posthog from 'posthog-js';
+posthog.init("LCy-zU8gQrMp8K75jpj3a89xC7to5FEZwQ_pUI1743U", {api_host: 'https://analytics-fa.herokuapp.com'});
+
+Handlebars.registerHelper('toCapitalCase', function (str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 });
 
