@@ -25,6 +25,7 @@
         "back": "Back",
         "enter an access code": "Enter an access code",
         "invalid access code": "Sorry, no game was found with the access code you provided!",
+        "copy access link": "Copy game link",
         "join": "Join",
         "footer": "Application based on the Spyfall meteor application: ",
 	"credits": "Game published by ",

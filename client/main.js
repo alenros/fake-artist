@@ -564,6 +564,26 @@ Template.lobby.events({
 
     Games.update(game._id, { $set: { state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null } });
   },
+  'click #copyAccessLinkImg': function () {
+    console.log("copying");
+    let accessLink = "https://fake-artist.herokuapp.com/" + getAccessLink();
+
+    const textArea = document.createElement("textarea");
+    textArea.value = accessLink;
+    document.body.appendChild(textArea);
+    textArea.select();
+
+    document.execCommand("copy");
+    document.body.removeChild(textArea);
+
+    var tooltip = document.getElementById("copyAccessLinkTooltip");
+    tooltip.innerHTML = "Copied!";
+  },
+  'mouseout #copyAccessLinkImg' : function(){
+    var tooltip = document.getElementById("copyAccessLinkTooltip");
+    // TODO revert the text using the translated string
+    // tooltip.innerHTML = "Copy link";
+  },
   'click .btn-toggle-qrcode': function () {
     $(".qrcode-container").toggle();
   },
@@ -580,12 +600,10 @@ Template.lobby.events({
   'click .btn-bad-category': function () {
     console.log('got a bad category');
     console.log('game.wordAndCategory.category');
-
   },
   'click .btn-bad-word': function () {
     console.log('got a bad word');
     console.log('game.wordAndCategory.text');
-
   }
 });
 
