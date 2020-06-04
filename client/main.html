@@ -3,10 +3,13 @@
   <title>A Fake Artist Goes to New York</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link href="https://fonts.googleapis.com/css?family=Alef|Oswald|Open+Sans" rel="stylesheet" async media="none" onload="if(media!='all')media='all'">
+  <link href="https://fonts.googleapis.com/css?family=Alef|Oswald|Open+Sans" rel="stylesheet" async media="none"
+    onload="if(media!='all')media='all'">
 
-  <link rel="stylesheet" href="css/normalize.css" type="text/css" async media="none" onload="if(media!='all')media='all'"> 
-  <link rel="stylesheet" href="css/skeleton.css" type="text/css" async media="none" onload="if(media!='all')media='all'">
+  <link rel="stylesheet" href="css/normalize.css" type="text/css" async media="none"
+    onload="if(media!='all')media='all'">
+  <link rel="stylesheet" href="css/skeleton.css" type="text/css" async media="none"
+    onload="if(media!='all')media='all'">
   <link rel="stylesheet" href="css/styles.css" type="text/css" async media="none" onload="if(media!='all')media='all'">
 
   <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
@@ -18,7 +21,7 @@
   <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
   <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
-  <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -45,7 +48,7 @@
 <template name="startMenu">
   <div class="main-menu">
     <h4>{{_ "ui.welcome to fake artist" }}</h4>
-	<img src="/img/{{_ "ui.logo-file"}}" class="logo">
+    <img src="/img/{{_ "ui.logo-file"}}" class="logo" id="logo">
     <hr>
     <div class="button-container">
 
@@ -56,7 +59,8 @@
       <a href="https://insider-online.herokuapp.com"><strong>{{_ "ui.try insider"}}</strong></a>
     </div>
     {{# if alternativeURL }}
-      <p class="high-load-message">The site is currently experiencing very heavy load. If things seem slow or broken, try this alternative URL: <a href="{{ alternativeURL }}">{{ alternativeURL }}</a></p>
+    <p class="high-load-message">The site is currently experiencing very heavy load. If things seem slow or broken, try
+      this alternative URL: <a href="{{ alternativeURL }}">{{ alternativeURL }}</a></p>
     {{/if}}
   </div>
 </template>
@@ -89,139 +93,143 @@
       <a href="{{ accessLink }}">https://fake-artist.herokuapp.com/{{ accessLink }}</a>
     </div>
   </div>
-
   <hr>
 
   <ol class="lobby-player-list">
     {{#each players }}
-      <li>
-        {{ name }}
+    <li>
+      {{ name }}
 
-        {{#if isCurrent }}
-          <a href="#" class="btn-edit-player" data-player-id="{{ _id }}">
-            <img src="/icons/pencil-alt.svg" class="icon"/>
-          </a>
-        {{else}}
-          <a href="#" class="btn-remove-player" data-player-id="{{ _id }}">
-            <img src="/icons/window-close.svg" class="icon"/>
-          </a>
-        {{/if}}
-      </li>
+      {{#if isCurrent }}
+      <a href="#" class="btn-edit-player" data-player-id="{{ _id }}">
+        <img src="/icons/pencil-alt.svg" class="icon" />
+      </a>
+      {{else}}
+      <a href="#" class="btn-remove-player" data-player-id="{{ _id }}">
+        <img src="/icons/window-close.svg" class="icon" />
+      </a>
+      {{/if}}
+    </li>
     {{/each}}
   </ol>
 
   <hr>
-<table>
-<tr><td>
-{{_ "ui.choose own word"}}
-</td><td>
-<div>
-	<input type="text" id="user-word" name="userWord" placeholder='{{_ "ui.enter word" }}'>
-  <input type="text" id="user-category" name="userCategory" placeholder='{{_ "ui.enter category" }}'>
-<BR>
-	<button class="btn-submit-user-word" data-player-id="{{ player._id}}">{{_ "ui.submit user word" }}</button>
-</div>	
-</td>
-</tr>
-<tr>
-<td>
-{{_ "ui.let us choose"}}
-</td>
-<td>
+  <table>
+    <tr>
+      <td>
+        {{_ "ui.choose own word"}}
+      </td>
+      <td>
+        <div>
+          <input type="text" id="user-word" name="userWord" placeholder='{{_ "ui.enter word" }}'>
+          <input type="text" id="user-category" name="userCategory" placeholder='{{_ "ui.enter category" }}'>
+          <BR>
+          <button class="btn-submit-user-word" data-player-id="{{ player._id}}">{{_ "ui.submit user word" }}</button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        {{_ "ui.let us choose"}}
+      </td>
+      <td>
 
-  
-    <button class="btn-start">{{_ "ui.start game" }}</button>
 
-</td>
-</tr>
+        <button class="btn-start">{{_ "ui.start game" }}</button>
 
-</table>
+      </td>
+    </tr>
 
-<div class="button-container">
+  </table>
+
+  <div class="button-container">
     <button class="btn-leave">{{_ "ui.leave game" }}</button>
-</div>
+  </div>
 
 </template>
 
 <template name="gameView">
-  <h4><a href="#" class="game-countdown {{#if gameFinished }}finished{{/if}} {{#if game.paused }}paused{{/if}}">{{{ timeRemaining }}}</a></h4>
+  <h4><a href="#"
+      class="game-countdown {{#if gameFinished }}finished{{/if}} {{#if game.paused }}paused{{/if}}">{{{ timeRemaining }}}</a>
+  </h4>
 
   <div class="status-container">
     <button class="btn-toggle-status">{{_ "ui.show hide" }}</button>
-	<table>
-	<tr><td class="status-container-content">
-	{{#if player.isFakeArtist }}
-  <img src="/img/fake-artist.png" width=80px height=80px>
-  {{else }}
-    {{#if player.isQuestionMaster }}
-      <img src="/img/presentor.png" width=80px height=80px>
-    {{else }}
-      <img src="/img/real-artist.png" width=80px height=80px>
-    {{/if}}
-	{{/if}}
-	</td>
-	<td>
-    <div class="status-container-content">
-      {{#if player.isFakeArtist }}
-        <div class="player-status player-status-fake-artist"> {{_ "ui.you are the fake artist" }}</div>
-        <div class="current-role">
-          <div class="current-role-header">
-            {{_ "ui.your category" }}:
-          </div>
-          <div class="current-role-name">
-            <strong>{{_ player.category }}</strong>
-          </div>
-        </div>
-      {{else}}
-        {{#if player.isQuestionMaster }}
-          <div class="player-status player-status-question-master">{{{_ "ui.you are the question master" }}}</div>
-        {{else}}
-          <div class="player-status player-status-not-fake-artist">{{{_ "ui.you are not the fake artist" }}}</div>
-        {{/if}}
+    <table>
+      <tr>
+        <td class="status-container-content">
+          {{#if player.isFakeArtist }}
+          <img src="/img/fake-artist.png" width=80px height=80px>
+          {{else }}
+          {{#if player.isQuestionMaster }}
+          <img src="/img/presentor.png" width=80px height=80px>
+          {{else }}
+          <img src="/img/real-artist.png" width=80px height=80px>
+          {{/if}}
+          {{/if}}
+        </td>
+        <td>
+          <div class="status-container-content">
+            {{#if player.isFakeArtist }}
+            <div class="player-status player-status-fake-artist"> {{_ "ui.you are the fake artist" }}</div>
+            <div class="current-role">
+              <div class="current-role-header">
+                {{_ "ui.your category" }}:
+              </div>
+              <div class="current-role-name">
+                <strong>{{_ player.category }}</strong>
+              </div>
+            </div>
+            {{else}}
+            {{#if player.isQuestionMaster }}
+            <div class="player-status player-status-question-master">{{{_ "ui.you are the question master" }}}</div>
+            {{else}}
+            <div class="player-status player-status-not-fake-artist">{{{_ "ui.you are not the fake artist" }}}</div>
+            {{/if}}
 
-        <div class="current-word">
-          <div class="current-word-header">
-            {{_ "ui.the word" }}:
-          </div>
-          <div class="current-word-text">
-            <strong>{{_ game.word.text }}</strong>
-          </div>
-        </div>
+            <div class="current-word">
+              <div class="current-word-header">
+                {{_ "ui.the word" }}:
+              </div>
+              <div class="current-word-text">
+                <strong>{{_ game.word.text }}</strong>
+              </div>
+            </div>
 
-        <div class="current-category">
-          <div class="current-category-header">
-            {{_ "ui.your category" }}:
+            <div class="current-category">
+              <div class="current-category-header">
+                {{_ "ui.your category" }}:
+              </div>
+              <div class="current-category-text">
+                {{_ player.category }}
+              </div>
+            </div>
+            {{/if}}
           </div>
-          <div class="current-category-text">
-            {{_ player.category }}
-          </div>
-        </div>
-      {{/if}}
-    </div>
-    </td>
-  </tr>
-</table>
+        </td>
+      </tr>
+    </table>
   </div>
 
   <h5>{{_ "ui.players" }}</h5>
   <ul class="ingame-player-list">
     {{#each players }}
-      <li>
-        <div class="player-name">
-          {{ name }}
-          {{#if isQuestionMaster }}
-            <div class="first-player-indicator">{{_ "ui.question master indicator" }}</div>
-          {{else}}
-            <div class="first-player-indicator">{{ turnOrder }}</div>
-          {{/if}}
-        </div>
-      </li>
+    <li>
+      <div class="player-name">
+        {{ name }}
+        {{#if isQuestionMaster }}
+        <div class="first-player-indicator">{{_ "ui.question master indicator" }}</div>
+        {{else}}
+        <div class="first-player-indicator">{{ turnOrder }}</div>
+        {{/if}}
+      </div>
+    </li>
     {{/each}}
   </ul>
 
   <div class="u-cf"></div>
-  
-<!--
+
+  <!--
   <h5>{{_ "ui.location reference" }}</h5>
   <ul class="location-list">
     {{#each locations}}
@@ -237,34 +245,32 @@
     <button class="btn-end">{{_ "ui.end game" }}</button>
     <button class="btn-leave">{{_ "ui.leave game" }}</button>
   </div>
-  
+
   <script type="text/javascript">
-    var sc_project=11699336; 
-    var sc_invisible=1; 
-    var sc_security="0f5c66e9"; 
-    </script>
-    <script type="text/javascript"
-    src="https://www.statcounter.com/counter/counter.js"
-    async></script>
-    <noscript><div class="statcounter"><a title="Web Analytics"
-    href="http://statcounter.com/" target="_blank"><img
-    class="statcounter"
-    src="//c.statcounter.com/11699336/0/0f5c66e9/1/" alt="Web
-    Analytics"></a></div></noscript>
+    var sc_project = 11699336;
+    var sc_invisible = 1;
+    var sc_security = "0f5c66e9"; 
+  </script>
+  <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+  <noscript>
+    <div class="statcounter"><a title="Web Analytics" href="http://statcounter.com/" target="_blank"><img
+          class="statcounter" src="//c.statcounter.com/11699336/0/0f5c66e9/1/" alt="Web
+    Analytics"></a></div>
+  </noscript>
 </template>
 
 <template name="createGame">
   <h4>
     {{#if isLoading }}
-      <span class="spinner"></span>
+    <span class="spinner"></span>
     {{else}}
-      {{_ "ui.welcome to fake artist" }}
+    {{_ "ui.welcome to fake artist" }}
     {{/if}}
   </h4>
 
   <hr>
 
-  <form id="create-game">  
+  <form id="create-game">
     <div class="">
       <input type="text" id="player-name" name="playerName" placeholder='{{_ "ui.enter your name" }}'>
 
@@ -279,17 +285,18 @@
 <template name="joinGame">
   <h4 class="join-game">
     {{#if isLoading }}
-      <span class="spinner"></span>
+    <span class="spinner"></span>
     {{else}}
-      {{_ "ui.welcome to fake artist" }}
+    {{_ "ui.welcome to fake artist" }}
     {{/if}}
   </h4>
 
   <hr>
 
-  <form id="join-game">  
+  <form id="join-game">
     <div>
-      <input autocorrect="off" autocapitalize="off" type="number" id="access-code" name="accessCode" placeholder='{{_ "ui.enter an access code" }}'>
+      <input autocorrect="off" autocapitalize="off" type="number" id="access-code" name="accessCode"
+        placeholder='{{_ "ui.enter an access code" }}'>
       <input type="text" id="player-name" name="playerName" placeholder='{{_ "ui.enter your name" }}'>
 
       {{> flashMessages}}
@@ -304,31 +311,31 @@
 
 <template name="footer">
   {{#if languages }}
-    <div dir="ltr" class="languages">
-      <select class="language-select">
-        {{#each languages }}
-            <option value="{{code}}" {{selected}}>{{toCapitalCase languageDetails.name}}</option>
-        {{/each}}
-      </select>
-      <ul class="language-list">
-        {{#each languages }}
-          <li>
-            <a class="btn-set-language" href="#" data-language="{{code}}">{{toCapitalCase languageDetails.name}}</a>
-          </li>
-        {{/each}}
-      </ul>
-    </div>
+  <div dir="ltr" class="languages">
+    <select class="language-select">
+      {{#each languages }}
+      <option value="{{code}}" {{selected}}>{{toCapitalCase languageDetails.name}}</option>
+      {{/each}}
+    </select>
+    <ul class="language-list">
+      {{#each languages }}
+      <li>
+        <a class="btn-set-language" href="#" data-language="{{code}}">{{toCapitalCase languageDetails.name}}</a>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
   {{/if}}
 
   <div class="footer">
-{{_ "ui.credits"}}
-<a href="http://oinkgms.com/">Oink Games</a>
-<BR>
-{{_ "ui.footer"}}
+    {{_ "ui.credits"}}
+    <a href="http://oinkgms.com/">Oink Games</a>
+    <BR>
+    {{_ "ui.footer"}}
   </div>
-<div class="author">
-{{_ "ui.Author"}}
-<a href='https://boardgamegeek.com/geekmail/compose?touser=alenros'>alenros@BGG</a> <BR>
-Or email me <a href="mailto:fakeartist@gmx.com">fakeartist@gmx.com</a>
-</div>
+  <div class="author">
+    {{_ "ui.Author"}}
+    <a href='https://boardgamegeek.com/geekmail/compose?touser=alenros'>alenros@BGG</a> <BR>
+    Or email me <a href="mailto:fakeartist@gmx.com">fakeartist@gmx.com</a>
+  </div>
 </template>
