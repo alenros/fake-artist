@@ -11,7 +11,7 @@
     "jquery": "^3.5.1",
     "meteor-node-stubs": "~0.2.4",
     "posthog-js": "^1.1.2",
-    "process-nextick-args": "^2.0.0",
+    "process-nextick-args": "^2.0.1",
     "readable-stream": "^3.1.1"
   }
 }
