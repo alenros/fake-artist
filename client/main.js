@@ -1,5 +1,5 @@
 ﻿import posthog from 'posthog-js';
-posthog.init("LCy-zU8gQrMp8K75jpj3a89xC7to5FEZwQ_pUI1743U", {api_host: 'https://analytics-fa.herokuapp.com'});
+posthog.init("LCy-zU8gQrMp8K75jpj3a89xC7to5FEZwQ_pUI1743U", { api_host: 'https://analytics-fa.herokuapp.com' });
 
 Handlebars.registerHelper('toCapitalCase', function (str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -11,8 +11,16 @@ function initUserLanguage() {
   if (language) {
     Session.set("language", language);
   }
+  let userLanguage = getUserLanguage()
+  setUserLanguage(userLanguage);
 
-  setUserLanguage(getUserLanguage());
+  // Track the language used for the game
+  let languageUsed = {
+    language: userLanguage,
+    languageType: "Browser",
+  };
+
+  LanguagesUsed.insert(languageUsed);
 }
 
 function getUserLanguage() {
@@ -478,7 +486,8 @@ Template.lobby.events({
     let languageUsed = {
       gameID: game._id,
       language: Session.get("language"),
-      playerCount: players.length
+      playerCount: players.length,
+      languageType: "Chosen",
     };
 
     LanguagesUsed.insert(languageUsed);
@@ -582,7 +591,7 @@ Template.lobby.events({
     var tooltip = document.getElementById("copyAccessLinkTooltip");
     tooltip.innerHTML = "Copied!";
   },
-  'mouseout #copyAccessLinkImg' : function(){
+  'mouseout #copyAccessLinkImg': function () {
     var tooltip = document.getElementById("copyAccessLinkTooltip");
     // TODO revert the text using the translated string
     // tooltip.innerHTML = "Copy link";
