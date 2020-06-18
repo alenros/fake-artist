@@ -1,6 +1,6 @@
 ﻿<head>
   <meta charset="utf-8">
-  <title>A Fake Artist Goes to New York</title>
+  <title>Con Artist</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link href="https://fonts.googleapis.com/css?family=Alef|Oswald|Open+Sans" rel="stylesheet" async media="none"
@@ -49,7 +49,20 @@
   <div class="main-menu">
     <h4>{{_ "ui.welcome to fake artist" }}</h4>
     <img src="/img/{{_ "ui.logo-file"}}" class="logo" id="logo">
+    
     <hr>
+
+    <div style="color:#555;">
+      <h5>{{_ "ui.how to play"}}</h5>
+      <h5>
+        <div>
+          {{_ "ui.game instructions"}}
+        </div>
+      </h5>
+    </div>
+
+    <hr>
+    
     <div class="button-container">
 
       <button id="btn-new-game">{{_ "ui.new game" }}</button>
@@ -168,7 +181,7 @@
       <tr>
         <td class="status-container-content">
           {{#if player.isFakeArtist }}
-          <img src="/img/fake-artist.png" width=80px height=80px>
+          <img src="/img/con-artist.png" width=80px height=80px>
           {{else }}
           {{#if player.isQuestionMaster }}
           <img src="/img/presentor.png" width=80px height=80px>
