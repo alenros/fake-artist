@@ -1,5 +1,4 @@
-
-Handlebars.registerHelper('toCapitalCase', function (str) {
+﻿Handlebars.registerHelper('toCapitalCase', function (str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 });
 
@@ -156,10 +155,8 @@ function generateNewPlayer(game, name) {
   return Players.findOne(playerID);
 }
 
-function getRandomWordAndCategory() {
+function getWordsProvider() {
   let words = [];
-
-  // var lang = Session.get("language");
 
   switch (getUserLanguage()) {
     case "he":
@@ -173,9 +170,36 @@ function getRandomWordAndCategory() {
       break;
   };
 
-  let wordIndex = Math.floor(Math.random() * words.length);
+  let minimumWordsInCategory = 10;
 
-  return words[wordIndex];
+  let excludedCategories = [];
+
+
+  let filteredWords = words.filter(word => !excludedCategories.includes(word.category.toLowerCase()));
+
+  let categoryToOccurences = {};
+
+  filteredWords.forEach(word => {
+    let wordOccurence = categoryToOccurences[word.category];
+    if (wordOccurence === undefined) {
+      wordOccurence = 1;
+    }
+    else {
+      wordOccurence = wordOccurence + 1;
+    }
+    categoryToOccurences[word.category] = wordOccurence;
+  });
+
+  filteredWords = filteredWords.filter(word => categoryToOccurences[word.category] >= minimumWordsInCategory);
+
+  return filteredWords;
+}
+
+function getRandomWordAndCategory() {
+  let filteredWords = getWordsProvider();
+  let wordIndex = Math.floor(Math.random() * filteredWords.length);
+
+  return filteredWords[wordIndex];
 }
 
 function shuffleArray(array) {
