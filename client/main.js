@@ -599,7 +599,6 @@ Template.lobby.events({
     Games.update(game._id, { $set: { state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null } });
   },
   'click #copyAccessLinkImg': function () {
-    console.log("copying");
     let accessLink = "https://fake-artist.herokuapp.com/" + getAccessLink();
 
     const textArea = document.createElement("textarea");
@@ -611,12 +610,13 @@ Template.lobby.events({
     document.body.removeChild(textArea);
 
     var tooltip = document.getElementById("copyAccessLinkTooltip");
+    tooltip.setAttribute('data-previous-text', tooltip.innerHTML);
+
     tooltip.innerHTML = "Copied!";
   },
   'mouseout #copyAccessLinkImg': function () {
     var tooltip = document.getElementById("copyAccessLinkTooltip");
-    // TODO revert the text using the translated string
-    // tooltip.innerHTML = "Copy link";
+    tooltip.innerHTML =  tooltip.getAttribute('data-previous-text');
   },
   'click .btn-toggle-qrcode': function () {
     $(".qrcode-container").toggle();
