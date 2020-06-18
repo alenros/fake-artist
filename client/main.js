@@ -1,5 +1,3 @@
-﻿import posthog from 'posthog-js';
-posthog.init("7LosgFMrRjBUr3M3dkEmGqx8w1zxETnFdXqvv3aFdoE", { api_host: 'https://analytics-fake-artist.herokuapp.com' });
 
 Handlebars.registerHelper('toCapitalCase', function (str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
