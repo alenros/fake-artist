@@ -216,7 +216,7 @@
                 {{_ "ui.the word" }}:
               </div>
               <div class="current-word-text">
-                <strong>{{_ game.word.text }}</strong>
+                <strong>{{toCapitalCase game.word.text  }}</strong>
               </div>
             </div>
 
@@ -225,7 +225,7 @@
                 {{_ "ui.your category" }}:
               </div>
               <div class="current-category-text">
-                {{_ player.category }}
+                {{toCapitalCase player.category }}
               </div>
             </div>
             {{/if}}
