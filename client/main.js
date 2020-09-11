@@ -555,6 +555,52 @@ Template.lobby.events({
       });
     });
 
+     // All Fake Artist Variant
+    let shouldPlayAllFakeArtistsVariant = document.getElementById("use-all-fake-artists-variant").checked;
+
+    let percentEveryoneIsAFakeArtist = 10;
+    let isEveryoneAFakeArtist = Math.floor(Math.random() * 100) < percentEveryoneIsAFakeArtist;
+
+    let isAllFakeArtistsVariantActive = shouldPlayAllFakeArtistsVariant === true && isEveryoneAFakeArtist === true
+    if(isAllFakeArtistsVariantActive){
+      players.forEach(function (player) {
+        if(player.isQuestionMaster === false){
+          Players.update(player._id, {
+            $set: {
+              isFakeArtist: true,
+            }
+          });
+        }
+      });
+    }
+     // All Fake Artists variant ends
+ 
+     // No Fake Artist Variant
+     let shouldPlayNoFakeArtistsVariant = document.getElementById("use-no-fake-artist-variant").checked;
+ 
+     let percentNoFakeArtist = 10;
+     let isNoFakeArtist = Math.floor(Math.random() * 100) < percentNoFakeArtist;
+ 
+     let isNoFakeArtistsVariantActive = shouldPlayNoFakeArtistsVariant === true && isNoFakeArtist === true
+     if(isNoFakeArtistsVariantActive){
+       players.forEach(function (player) {
+         if(player.isQuestionMaster === false){
+           Players.update(player._id, {
+             $set: {
+               isFakeArtist: false,
+             }
+           });
+         }
+       });
+     }
+     // No Fake Artist Variant ends
+    let variantsUsed = [];
+    if(shouldPlayNoFakeArtistsVariant === true){
+      variantsUsed.push("no fake-artist");
+    }
+    if(shouldPlayAllFakeArtistsVariant === true){
+      variantsUsed.push("all fake-artists");
+     }
     Players.update(questionMasterId, {
       $set: {
         isQuestionMaster: true,
@@ -578,12 +624,13 @@ Template.lobby.events({
       playerCount: players.length,
       gameType: "user-word",
       language: Session.get("language"),
+      variants: variantsUsed,
       word: word,
     };
 
     Analytics.insert(gameAnalytics);
 
-    Games.update(game._id, { $set: { state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null } });
+    Games.update(game._id, { $set: { state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null, usingAllFakeArtistsVariant: shouldPlayNoFakeArtistsVariant, usingNoFakeArist: shouldPlayNoFakeArtistsVariant } });
   },
   'click .btn-start': function () {
 
@@ -622,6 +669,52 @@ Template.lobby.events({
       Players.update(player._id, { $set: { category: wordAndCategory.category } });
     });
 
+    // All Fake Artist Variant
+    let shouldPlayAllFakeArtistsVariant = document.getElementById("use-all-fake-artists-variant").checked;
+
+    let percentEveryoneIsAFakeArtist = 10;
+    let isEveryoneAFakeArtist = Math.floor(Math.random() * 100) < percentEveryoneIsAFakeArtist;
+
+    if(shouldPlayAllFakeArtistsVariant === true && isEveryoneAFakeArtist === true){
+      players.forEach(function (player) {
+        if(player.isQuestionMaster === false){
+          Players.update(player._id, {
+            $set: {
+              isFakeArtist: true,
+            }
+          });
+        }
+      });
+    }
+    // All Fake Artists variant ends
+
+    // No Fake Artist Variant
+    let shouldPlayNoFakeArtistsVariant = document.getElementById("use-no-fake-artist-variant").checked;
+
+    let percentNoFakeArtist = 10;
+    let isNoFakeArtist = Math.floor(Math.random() * 100) < percentNoFakeArtist;
+
+    if(shouldPlayNoFakeArtistsVariant === true && isNoFakeArtist === true){
+      players.forEach(function (player) {
+        if(player.isQuestionMaster === false){
+          Players.update(player._id, {
+            $set: {
+              isFakeArtist: false,
+            }
+          });
+        }
+      });
+    }
+    // No Fake Artist Variant ends
+
+    let variantsUsed = [];
+    if(shouldPlayNoFakeArtistsVariant === true){
+      variantsUsed.push("no fake-artist");
+    }
+    if(shouldPlayAllFakeArtistsVariant === true){
+      variantsUsed.push("all fake-artists");
+    }
+
     // Track game analytics
     let gameAnalytics = {
       gameID: game._id,
@@ -629,6 +722,7 @@ Template.lobby.events({
       gameType: "game-word",
       language: Session.get("language"),
       languageType: "Chosen",
+      variants: variantsUsed
     };
 
     Analytics.insert(gameAnalytics);
