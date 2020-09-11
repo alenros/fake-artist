@@ -10,14 +10,6 @@ function initUserLanguage() {
   }
   let userLanguage = getUserLanguage()
   setUserLanguage(userLanguage);
-
-  // Track the language used for the game
-  let languageUsed = {
-    language: userLanguage,
-    languageType: "Browser",
-  };
-
-  LanguagesUsed.insert(languageUsed);
 }
 
 function getUserLanguage() {
@@ -251,6 +243,19 @@ function trackGameState() {
 function leaveGame() {
   let player = getCurrentPlayer();
 
+  let game = getCurrentGame();
+  let currentTimeRemaining = getTimeRemaining();
+  let players = Array.from(Players.find({ gameID: game._id }));
+  
+  let gameAnalytics = {
+    gameID: game._id,
+    playerCount: players.length,
+    timeLeft: currentTimeRemaining/1000/60,
+    status: "left game",
+  };
+
+  Analytics.insert(gameAnalytics);
+
   Session.set("currentView", "startMenu");
   Players.remove(player._id);
 
@@ -322,8 +327,23 @@ Template.footer.events({
 Template.startMenu.events({
   'click #btn-new-game': function () {
     Session.set("currentView", "createGame");
+    let referrer  = document.referrer;
+    let referrerAnalytics = {
+      cameFrom: referrer,
+      action: "New Game"
+    };
+
+    Analytics.insert(referrerAnalytics);
   },
   'click #btn-join-game': function () {
+    let referrer  = document.referrer;
+    let referrerAnalytics = {
+        cameFrom: referrer,
+        action: "Join Game",
+    };
+
+    Analytics.insert(referrerAnalytics);
+
     Session.set("currentView", "joinGame");
   }
 });
@@ -335,6 +355,12 @@ Template.startMenu.helpers({
 });
 
 Template.startMenu.rendered = function () {
+  let referrer  = document.referrer;
+  let referrerAnalytics = {
+      cameFrom: referrer,
+  };
+
+  Analytics.insert(referrerAnalytics);
   resetUserState();
 };
 
@@ -433,6 +459,14 @@ Template.joinGame.helpers({
 Template.joinGame.rendered = function (event) {
   resetUserState();
 
+  let referrer  = document.referrer;
+  let referrerAnalytics = {
+      cameFrom: referrer,
+      action: "Join Game",
+  };
+
+  Analytics.insert(referrerAnalytics);
+
   let urlAccessCode = Session.get('urlAccessCode');
 
   if (urlAccessCode) {
@@ -504,16 +538,6 @@ Template.lobby.events({
 
     UserWords.insert(userWord);
 
-    // Track the language used for the game
-    let languageUsed = {
-      gameID: game._id,
-      language: Session.get("language"),
-      playerCount: players.length,
-      languageType: "Chosen",
-    };
-
-    LanguagesUsed.insert(languageUsed);
-
     regularPlayers.forEach(function (player, index) {
       turnOrders.push(index + 1);
     });
@@ -548,6 +572,17 @@ Template.lobby.events({
     let wordAndCategory = {
       text: word, category: category
     };
+
+    let gameAnalytics = {
+      gameID: game._id,
+      playerCount: players.length,
+      gameType: "user-word",
+      language: Session.get("language"),
+      word: word,
+    };
+
+    Analytics.insert(gameAnalytics);
+
     Games.update(game._id, { $set: { state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null } });
   },
   'click .btn-start': function () {
@@ -561,15 +596,6 @@ Template.lobby.events({
 
     let fakeArtistIndex = Math.floor(Math.random() * players.count());
     let firstPlayerIndex = Math.floor(Math.random() * players.count());
-
-    // Track the language used for the game
-    let languageUsed = {
-      gameID: game._id,
-      language: Session.get("language"),
-      playerCount: players.count()
-    };
-
-    LanguagesUsed.insert(languageUsed);
 
     let turnOrders = []
 
@@ -595,6 +621,17 @@ Template.lobby.events({
     players.forEach(function (player) {
       Players.update(player._id, { $set: { category: wordAndCategory.category } });
     });
+
+    // Track game analytics
+    let gameAnalytics = {
+      gameID: game._id,
+      playerCount: players.length,
+      gameType: "game-word",
+      language: Session.get("language"),
+      languageType: "Chosen",
+    };
+
+    Analytics.insert(gameAnalytics);
 
     Games.update(game._id, { $set: { state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null } });
   },
@@ -702,6 +739,19 @@ Template.gameView.events({
   'click .btn-end': function () {
     let game = getCurrentGame();
     Games.update(game._id, { $set: { state: 'waitingForPlayers' } });
+
+    let currentTimeRemaining = getTimeRemaining();
+
+    let players = Array.from(Players.find({ gameID: game._id }));
+
+    let gameAnalytics = {
+      gameID: game._id,
+      playerCount: players.length,
+      timeLeft: currentTimeRemaining/1000/60,
+      status: "game ended",
+    };
+  
+    Analytics.insert(gameAnalytics);
   },
   'click .btn-toggle-status': function () {
     $(".status-container-content").toggle();
