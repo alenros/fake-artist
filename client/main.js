@@ -525,8 +525,8 @@ Template.lobby.events({
     };
 
     let questionMasterId = $(event.currentTarget).data('player-id');
-    let players = Array.from(Players.find({ gameID: game._id }, { _id: { $ne: questionMasterId } }));
-    let regularPlayers = players.filter(player => player._id != questionMasterId);
+    let currentPlayers = Array.from(Players.find({ gameID: game._id }, { _id: { $ne: questionMasterId } }));
+    let regularPlayers = currentPlayers.filter(player => player._id != questionMasterId);
 
     let localEndTime = moment().add(game.lengthInMinutes, 'minutes');
     let gameEndTime = TimeSync.serverTime(localEndTime);
@@ -563,7 +563,7 @@ Template.lobby.events({
 
     let isAllFakeArtistsVariantActive = shouldPlayAllFakeArtistsVariant === true && isEveryoneAFakeArtist === true
     if(isAllFakeArtistsVariantActive){
-      players.forEach(function (player) {
+      currentPlayers.forEach(function (player) {
         if(player.isQuestionMaster === false){
           Players.update(player._id, {
             $set: {
@@ -583,7 +583,7 @@ Template.lobby.events({
  
      let isNoFakeArtistsVariantActive = shouldPlayNoFakeArtistsVariant === true && isNoFakeArtist === true
      if(isNoFakeArtistsVariantActive){
-       players.forEach(function (player) {
+       currentPlayers.forEach(function (player) {
          if(player.isQuestionMaster === false){
            Players.update(player._id, {
              $set: {
@@ -600,7 +600,8 @@ Template.lobby.events({
     }
     if(shouldPlayAllFakeArtistsVariant === true){
       variantsUsed.push("all fake-artists");
-     }
+    }
+
     Players.update(questionMasterId, {
       $set: {
         isQuestionMaster: true,
@@ -609,7 +610,7 @@ Template.lobby.events({
       }
     });
 
-    players.forEach(function (player) {
+    currentPlayers.forEach(function (player) {
       Players.update(player._id, { $set: { category: category } });
     });
 
@@ -621,7 +622,7 @@ Template.lobby.events({
 
     let gameAnalytics = {
       gameID: game._id,
-      playerCount: players.length,
+      playerCount: currentPlayers.length,
       gameType: "user-word",
       language: Session.get("language"),
       variants: variantsUsed,
@@ -636,25 +637,25 @@ Template.lobby.events({
 
     let game = getCurrentGame();
     let wordAndCategory = getRandomWordAndCategory();
-
-    let players = Players.find({ gameID: game._id });
+    
+    let currentPlayers = Array.from(Players.find({ gameID: game._id }));
     let localEndTime = moment().add(game.lengthInMinutes, 'minutes');
     let gameEndTime = TimeSync.serverTime(localEndTime);
 
-    let fakeArtistIndex = Math.floor(Math.random() * players.count());
-    let firstPlayerIndex = Math.floor(Math.random() * players.count());
+    let fakeArtistIndex = Math.floor(Math.random() * currentPlayers.length);
+    let firstPlayerIndex = Math.floor(Math.random() * currentPlayers.length);
 
     let turnOrders = []
 
     let i = 0;
-    while (turnOrders.length < players.count()) {
+    while (turnOrders.length < currentPlayers.length) {
       turnOrders.push(i);
       i = i + 1;
     }
 
     turnOrders = shuffle(turnOrders);
 
-    players.forEach(function (player, index) {
+    currentPlayers.forEach(function (player, index) {
       Players.update(player._id, {
         $set: {
           isQuestionMaster: false,
@@ -665,7 +666,7 @@ Template.lobby.events({
       });
     });
 
-    players.forEach(function (player) {
+    currentPlayers.forEach(function (player) {
       Players.update(player._id, { $set: { category: wordAndCategory.category } });
     });
 
@@ -676,7 +677,7 @@ Template.lobby.events({
     let isEveryoneAFakeArtist = Math.floor(Math.random() * 100) < percentEveryoneIsAFakeArtist;
 
     if(shouldPlayAllFakeArtistsVariant === true && isEveryoneAFakeArtist === true){
-      players.forEach(function (player) {
+      currentPlayers.forEach(function (player) {
         if(player.isQuestionMaster === false){
           Players.update(player._id, {
             $set: {
@@ -695,7 +696,7 @@ Template.lobby.events({
     let isNoFakeArtist = Math.floor(Math.random() * 100) < percentNoFakeArtist;
 
     if(shouldPlayNoFakeArtistsVariant === true && isNoFakeArtist === true){
-      players.forEach(function (player) {
+      currentPlayers.forEach(function (player) {
         if(player.isQuestionMaster === false){
           Players.update(player._id, {
             $set: {
@@ -718,7 +719,7 @@ Template.lobby.events({
     // Track game analytics
     let gameAnalytics = {
       gameID: game._id,
-      playerCount: players.length,
+      playerCount: currentPlayers.length,
       gameType: "game-word",
       language: Session.get("language"),
       languageType: "Chosen",
