@@ -431,6 +431,13 @@ Template.joinGame.events({
         Meteor.subscribe('players', game._id);
         let player = generateNewPlayer(game, playerName);
 
+        let referrer  = document.referrer;
+        let referrerAnalytics = {
+            cameFrom: referrer,
+            action: "Join Game",
+        };
+      
+        Analytics.insert(referrerAnalytics);
         Session.set('urlAccessCode', null);
         Session.set("gameID", game._id);
         Session.set("playerID", player._id);
