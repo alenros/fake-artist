@@ -358,8 +358,8 @@ Template.startMenu.rendered = function () {
   let referrer  = document.referrer;
   let referrerAnalytics = {
       cameFrom: referrer,
+      action: "Start Page"
   };
-
   Analytics.insert(referrerAnalytics);
   resetUserState();
 };
