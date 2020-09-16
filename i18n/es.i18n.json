@@ -30,6 +30,7 @@
         "enter an access code": "Escribe un código de acceso",
         "invalid access code": "¡No existe ninguna partida con ese código!",
         "copy access link": "Copiar enlace",
+        "copied": "Copiado",
         "join": "Unirse",
         "footer": "Basado en la app de \"Spyfall\" de meteor: ",
 	"credits": "Juego original publicado por ",

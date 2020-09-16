@@ -741,14 +741,14 @@ Template.lobby.events({
     document.execCommand("copy");
     document.body.removeChild(textArea);
 
-    var tooltip = document.getElementById("copyAccessLinkTooltip");
-    tooltip.setAttribute('data-previous-text', tooltip.innerHTML);
-
-    tooltip.innerHTML = "Copied!";
+    let tooltip = document.getElementById("copyAccessLinkTooltip");
+   
+    tooltip.innerHTML = TAPi18n.__("ui.copied");
   },
   'mouseout #copyAccessLinkImg': function () {
-    var tooltip = document.getElementById("copyAccessLinkTooltip");
-    tooltip.innerHTML =  tooltip.getAttribute('data-previous-text');
+    let tooltip = document.getElementById("copyAccessLinkTooltip");
+
+    tooltip.innerHTML = TAPi18n.__("ui.copy access link");;
   },
   'click .btn-toggle-qrcode': function () {
     $(".qrcode-container").toggle();
