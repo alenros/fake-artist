@@ -14,6 +14,7 @@
         "you are not the fake artist": "¡<strong>No</strong> eres el pintor impostor!",
         "you are the question master": "¡Eres el curador!",
         "question master indicator": "Curador",
+        "variants": "Variants",
         "all fake artists tooltip": "Puedes usar esta variante para que el pintor impostor dude de su propia identidad o para hacer la partida más graciosa.",
         "play with the all fake-artists variant": "<strong>Todos somos pintores impostores:</strong> Hay un 10% de probabilidades de que todos seamos el pintor impostor. Si eso sucede, la única manera de ganar es si todos se votan a sí mismos.",
         "no fake-artist tooltip":"Puedes usar esta variante para ayudar al pintor impostor, aunque probablemente los demás jugadores sospecharán de la primera persona que sugiera que no hay pintor impostor, incluso si es verdad.",
