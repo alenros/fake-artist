@@ -13,6 +13,8 @@ The original boardgame at BoardGameGeek: https://boardgamegeek.com/boardgame/135
 
 
 # Running Your Copy
+Feel free to contact me if you want help running your own instance. I have more detailed explnation of how to deploy the app in the works.
+
 Requirements:
 MeteorJS
 NodeJS
