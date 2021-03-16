@@ -157,6 +157,9 @@ function getWordsProvider() {
     case "en":
       words = words_en;
       break;
+    case "de":
+      words = words_de;
+      break;
     default:
       words = words_en;
       break;
