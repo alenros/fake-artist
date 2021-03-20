@@ -18,7 +18,7 @@ function getUserLanguage() {
   if (language) {
     return language;
   } else {
-    return "en";
+    return "de";
   }
 };
 
@@ -31,12 +31,12 @@ function setUserLanguage(language) {
 
 function getLanguageDirection() {
   let language = getUserLanguage()
-  let rtlLanguages = ['he', 'ar'];
+  let rtlLanguages = ['he', 'ar']; // hebrew and arabic
 
   if ($.inArray(language, rtlLanguages) !== -1) {
-    return 'rtl';
+    return 'rtl'; // right to left
   } else {
-    return 'ltr';
+    return 'ltr'; // left to right
   }
 }
 
