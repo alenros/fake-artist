@@ -741,7 +741,7 @@ Template.lobby.events({
     Games.update(game._id, { $set: { state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null } });
   },
   'click #copyAccessLinkImg': function () {
-    let accessLink = "https://fake-artist.herokuapp.com/" + getAccessLink();
+    let accessLink = "https://schwindler-in-new-york.herokuapp.com/" + getAccessLink();
 
     const textArea = document.createElement("textarea");
     textArea.value = accessLink;
@@ -785,7 +785,7 @@ Template.lobby.events({
 
 Template.lobby.rendered = function (event) {
   let url = getAccessLink();
-  url = "https://fake-artist.herokuapp.com/" + url;
+  url = "https://schwindler-in-new-york.herokuapp.com/" + url;
   let qrcodesvg = new Qrcodesvg(url, "qrcode", 250);
   qrcodesvg.draw();
 };
