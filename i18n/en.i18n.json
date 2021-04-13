@@ -44,6 +44,7 @@
 	"choose own word":"Use your own word",
     "let us choose":"or let us choose it for you",
     "bad category":"report category",
-    "bad word":"report word"
+    "bad word":"report word",
+    "github link": "https://github.com/alenros/fake-artist"
     }
 }
