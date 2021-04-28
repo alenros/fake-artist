@@ -38,6 +38,21 @@ function getLanguageDirection() {
   } else {
     return 'ltr';
   }
+
+function getRandomSubset(collection, n) {
+  if (n > collection.length) {
+    return [];
+  }
+  const newCollection = collection.map((i) => i);
+  for (let i = 0; i <= (n - 1); i += 1) {
+    const newIndex = Math.floor(Math.random() * newCollection.length);
+    const temp = newCollection[newIndex];
+    newCollection[newIndex] = newCollection[i];
+    newCollection[i] = temp;
+  }
+
+  newCollection.splice(n, newCollection.length);
+  return newCollection;
 }
 
 function shuffle(a) {
@@ -612,6 +627,45 @@ Template.lobby.events({
     if (shouldPlayAllFakeArtistsVariant === true) {
       variantsUsed.push('all fake-artists');
     }
+
+    const shouldPlayLessFirstFakeArtistsVariant = document.getElementById('use-less-first-fake-artist-variant').checked;
+
+    if (shouldPlayLessFirstFakeArtistsVariant
+          && !isAllFakeArtistsVariantActive
+          && !isNoFakeArtistsVariantActive) {
+      if (firstPlayerIndex === fakeArtistIndex) {
+        const percentFakeArtistisFirst = 10;
+        const isFakeArtistStillFirst = Math.floor(Math.random() * 100) < percentFakeArtistisFirst;
+        console.log(`is still first: ${isFakeArtistStillFirst}`);
+        if (!isFakeArtistStillFirst) {
+          const otherPlayers = regularPlayers.map((player) => player);
+
+          otherPlayers.splice(fakeArtistIndex, 1);
+
+          const newFirstPlayer = getRandomSubset(otherPlayers, 1)[0];
+
+          const nonFirstPlayers = regularPlayers.filter((player) => player._id != newFirstPlayer._id);
+
+          // Shuffle
+          const playersByTurnOrder = getRandomSubset(nonFirstPlayers, nonFirstPlayers.length);
+
+          // insert newFirstPlayer at start
+          playersByTurnOrder.splice(0, 0, newFirstPlayer);
+
+          playersByTurnOrder.forEach((player, index) => {
+            Players.update(player._id, {
+              $set: {
+                isFirstPlayer: index === 0,
+                turnOrder: index + 1,
+              },
+            });
+          });
+        }
+      }
+    }
+
+    if (shouldPlayLessFirstFakeArtistsVariant === true) {
+      variantsUsed.push('less first');
     }
 
     Players.update(questionMasterId, {
@@ -722,6 +776,42 @@ Template.lobby.events({
     let isNoFakeArtistsVariantActive = shouldPlayNoFakeArtistsVariant && isNoFakeArtist;
     // No Fake Artist Variant ends
 
+    // Fake Artist Less First variant
+    let shouldPlayLessFirstFakeArtistsVariant = document.getElementById('use-less-first-fake-artist-variant').checked;
+
+    if (shouldPlayLessFirstFakeArtistsVariant && !isAllFakeArtistsVariantActive && !isNoFakeArtistsVariantActive) {
+      if (firstPlayerIndex === fakeArtistIndex) {
+        let percentFakeArtistisFirst = 10;
+        let isFakeArtistStillFirst = Math.floor(Math.random() * 100) < percentFakeArtistisFirst;
+        console.log(`is still first: ${isFakeArtistStillFirst}`);
+        if (!isFakeArtistStillFirst) {
+          const otherPlayers = currentPlayers.map((player) => player);
+
+          otherPlayers.splice(fakeArtistIndex, 1);
+
+          const newFirstPlayer = getRandomSubset(otherPlayers, 1)[0];
+
+          const nonFirstPlayers = currentPlayers.filter((player) => player._id != newFirstPlayer._id);
+
+          // Shuffle
+          const playersByTurnOrder = getRandomSubset(nonFirstPlayers, nonFirstPlayers.length);
+
+          // insert newFirstPlayer at start
+          playersByTurnOrder.splice(0, 0, newFirstPlayer);
+
+          playersByTurnOrder.forEach((player, index) => {
+            Players.update(player._id, {
+              $set: {
+                isFirstPlayer: index === 0,
+                turnOrder: index + 1,
+              },
+            });
+          });
+        }
+      }
+    }
+    // Fake Artist Less First variant ends
+
     const variantsUsed = [];
     if (shouldPlayNoFakeArtistsVariant === true) {
       variantsUsed.push('no fake-artist');
@@ -729,6 +819,8 @@ Template.lobby.events({
     if (shouldPlayAllFakeArtistsVariant === true) {
       variantsUsed.push('all fake-artists');
     }
+    if (shouldPlayLessFirstFakeArtistsVariant === true) {
+      variantsUsed.push('less first');
     }
 
     // Track game analytics
