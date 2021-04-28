@@ -38,6 +38,7 @@ function getLanguageDirection() {
   } else {
     return 'ltr';
   }
+}
 
 function getRandomSubset(collection, n) {
   if (n > collection.length) {
