@@ -253,8 +253,8 @@ function leaveGame() {
   let gameAnalytics = {
     gameID: game._id,
     playerCount: players.length,
-    timeLeft: currentTimeRemaining/1000/60,
-    status: "left game",
+    timeLeft: currentTimeRemaining / 1000 / 60,
+    status: 'left game',
   };
 
   Analytics.insert(gameAnalytics);
@@ -271,7 +271,7 @@ function hasHistoryApi() {
 
 initUserLanguage();
 
-Meteor.setInterval(function () {
+Meteor.setInterval(() => {
   Session.set('time', new Date());
 }, 1000);
 
@@ -287,7 +287,7 @@ if (hasHistoryApi()) {
 
     let currentURL = '/';
     if (accessCode) {
-      currentURL += accessCode + '/';
+      currentURL += `${accessCode}/`;
     }
     window.history.pushState(null, null, currentURL);
   }
@@ -301,15 +301,15 @@ FlashMessages.configure({
 });
 
 Template.main.helpers({
-  whichView: function () {
+  whichView() {
     return Session.get('currentView');
   },
-  language: function () {
+  language() {
     return getUserLanguage();
   },
-  textDirection: function () {
+  textDirection() {
     return getLanguageDirection();
-  }
+  },
 });
 
 Template.footer.helpers({
@@ -352,7 +352,7 @@ Template.startMenu.events({
 });
 
 Template.startMenu.helpers({
-  alternativeURL: function () {
+  alternativeURL() {
     return Meteor.settings.public.alternative;
   }
 });
@@ -571,10 +571,10 @@ Template.lobby.events({
     let percentEveryoneIsAFakeArtist = 10;
     let isEveryoneAFakeArtist = Math.floor(Math.random() * 100) < percentEveryoneIsAFakeArtist;
 
-    let isAllFakeArtistsVariantActive = shouldPlayAllFakeArtistsVariant === true && isEveryoneAFakeArtist === true
-    if(isAllFakeArtistsVariantActive){
-      currentPlayers.forEach(function (player) {
-        if(player.isQuestionMaster === false){
+    let isAllFakeArtistsVariantActive = shouldPlayAllFakeArtistsVariant && isEveryoneAFakeArtist;
+    if (isAllFakeArtistsVariantActive) {
+      currentPlayers.forEach((player) => {
+        if (player.isQuestionMaster === false) {
           Players.update(player._id, {
             $set: {
               isFakeArtist: true,
@@ -583,33 +583,35 @@ Template.lobby.events({
         }
       });
     }
-     // All Fake Artists variant ends
- 
-     // No Fake Artist Variant
-     let shouldPlayNoFakeArtistsVariant = document.getElementById("use-no-fake-artist-variant").checked;
- 
-     let percentNoFakeArtist = 10;
-     let isNoFakeArtist = Math.floor(Math.random() * 100) < percentNoFakeArtist;
- 
-     let isNoFakeArtistsVariantActive = shouldPlayNoFakeArtistsVariant === true && isNoFakeArtist === true
-     if(isNoFakeArtistsVariantActive){
-       currentPlayers.forEach(function (player) {
-         if(player.isQuestionMaster === false){
-           Players.update(player._id, {
-             $set: {
-               isFakeArtist: false,
-             }
-           });
-         }
-       });
-     }
-     // No Fake Artist Variant ends
-    let variantsUsed = [];
-    if(shouldPlayNoFakeArtistsVariant === true){
-      variantsUsed.push("no fake-artist");
+    // All Fake Artists variant ends
+
+    // No Fake Artist Variant
+    const shouldPlayNoFakeArtistsVariant = document.getElementById('use-no-fake-artist-variant').checked;
+
+    const percentNoFakeArtist = 10;
+    const isNoFakeArtist = Math.floor(Math.random() * 100) < percentNoFakeArtist;
+
+    let isNoFakeArtistsVariantActive = shouldPlayNoFakeArtistsVariant && isNoFakeArtist;
+    if (isNoFakeArtistsVariantActive) {
+      currentPlayers.forEach((player) => {
+        if (player.isQuestionMaster === false) {
+          Players.update(player._id, {
+            $set: {
+              isFakeArtist: false,
+            },
+          });
+        }
+      });
     }
-    if(shouldPlayAllFakeArtistsVariant === true){
-      variantsUsed.push("all fake-artists");
+    // No Fake Artist Variant ends
+    const variantsUsed = [];
+    if (shouldPlayNoFakeArtistsVariant === true) {
+      variantsUsed.push('no fake-artist');
+    }
+
+    if (shouldPlayAllFakeArtistsVariant === true) {
+      variantsUsed.push('all fake-artists');
+    }
     }
 
     Players.update(questionMasterId, {
@@ -620,8 +622,8 @@ Template.lobby.events({
       }
     });
 
-    currentPlayers.forEach(function (player) {
-      Players.update(player._id, { $set: { category: category } });
+    currentPlayers.forEach((player) => {
+      Players.update(player._id, { $set: { category } });
     });
 
     Players.update(questionMasterId, { $set: { category: category } });
@@ -665,7 +667,7 @@ Template.lobby.events({
 
     turnOrders = shuffle(turnOrders);
 
-    currentPlayers.forEach(function (player, index) {
+    currentPlayers.forEach((player, index) => {
       Players.update(player._id, {
         $set: {
           isQuestionMaster: false,
@@ -676,7 +678,7 @@ Template.lobby.events({
       });
     });
 
-    currentPlayers.forEach(function (player) {
+    currentPlayers.forEach((player) => {
       Players.update(player._id, { $set: { category: wordAndCategory.category } });
     });
 
@@ -686,9 +688,9 @@ Template.lobby.events({
     let percentEveryoneIsAFakeArtist = 10;
     let isEveryoneAFakeArtist = Math.floor(Math.random() * 100) < percentEveryoneIsAFakeArtist;
 
-    if(shouldPlayAllFakeArtistsVariant === true && isEveryoneAFakeArtist === true){
-      currentPlayers.forEach(function (player) {
-        if(player.isQuestionMaster === false){
+    if (shouldPlayAllFakeArtistsVariant == true && isEveryoneAFakeArtist == true) {
+      currentPlayers.forEach((player) => {
+        if (player.isQuestionMaster == false) {
           Players.update(player._id, {
             $set: {
               isFakeArtist: true,
@@ -697,6 +699,7 @@ Template.lobby.events({
         }
       });
     }
+    let isAllFakeArtistsVariantActive = shouldPlayAllFakeArtistsVariant && isEveryoneAFakeArtist;
     // All Fake Artists variant ends
 
     // No Fake Artist Variant
@@ -705,9 +708,9 @@ Template.lobby.events({
     let percentNoFakeArtist = 10;
     let isNoFakeArtist = Math.floor(Math.random() * 100) < percentNoFakeArtist;
 
-    if(shouldPlayNoFakeArtistsVariant === true && isNoFakeArtist === true){
-      currentPlayers.forEach(function (player) {
-        if(player.isQuestionMaster === false){
+    if (shouldPlayNoFakeArtistsVariant && isNoFakeArtist) {
+      currentPlayers.forEach((player) => {
+        if (player.isQuestionMaster == false) {
           Players.update(player._id, {
             $set: {
               isFakeArtist: false,
@@ -716,14 +719,16 @@ Template.lobby.events({
         }
       });
     }
+    let isNoFakeArtistsVariantActive = shouldPlayNoFakeArtistsVariant && isNoFakeArtist;
     // No Fake Artist Variant ends
 
-    let variantsUsed = [];
-    if(shouldPlayNoFakeArtistsVariant === true){
-      variantsUsed.push("no fake-artist");
+    const variantsUsed = [];
+    if (shouldPlayNoFakeArtistsVariant === true) {
+      variantsUsed.push('no fake-artist');
     }
-    if(shouldPlayAllFakeArtistsVariant === true){
-      variantsUsed.push("all fake-artists");
+    if (shouldPlayAllFakeArtistsVariant === true) {
+      variantsUsed.push('all fake-artists');
+    }
     }
 
     // Track game analytics
@@ -738,10 +743,14 @@ Template.lobby.events({
 
     Analytics.insert(gameAnalytics);
 
-    Games.update(game._id, { $set: { state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null } });
+    Games.update(game._id, {
+      $set: {
+        state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null,
+      },
+    });
   },
   'click #copyAccessLinkImg': function () {
-    let accessLink = "https://fake-artist.herokuapp.com/" + getAccessLink();
+    const accessLink = `https://fake-artist.herokuapp.com/${getAccessLink()}`;
 
     const textArea = document.createElement("textarea");
     textArea.value = accessLink;
@@ -785,8 +794,8 @@ Template.lobby.events({
 
 Template.lobby.rendered = function (event) {
   let url = getAccessLink();
-  url = "https://fake-artist.herokuapp.com/" + url;
-  let qrcodesvg = new Qrcodesvg(url, "qrcode", 250);
+  url = `https://fake-artist.herokuapp.com/${url}`;
+  const qrcodesvg = new Qrcodesvg(url, 'qrcode', 250);
   qrcodesvg.draw();
 };
 
@@ -811,8 +820,8 @@ function getTimeRemaining() {
 Template.gameView.helpers({
   game: getCurrentGame,
   player: getCurrentPlayer,
-  players: function () {
-    let game = getCurrentGame();
+  players() {
+    const game = getCurrentGame();
 
     if (!game) {
       return null;
@@ -824,16 +833,16 @@ Template.gameView.helpers({
 
     return players;
   },
-  words: function () {
+  words() {
     return words_en;
   },
-  gameFinished: function () {
-    let timeRemaining = getTimeRemaining();
+  gameFinished() {
+    const timeRemaining = getTimeRemaining();
 
     return timeRemaining === 0;
   },
-  timeRemaining: function () {
-    let timeRemaining = getTimeRemaining();
+  timeRemaining() {
+    const timeRemaining = getTimeRemaining();
 
     return moment(timeRemaining).format('mm[<span>:</span>]ss');
   }
@@ -852,8 +861,8 @@ Template.gameView.events({
     let gameAnalytics = {
       gameID: game._id,
       playerCount: players.length,
-      timeLeft: currentTimeRemaining/1000/60,
-      status: "game ended",
+      timeLeft: currentTimeRemaining / 1000 / 60,
+      status: 'game ended',
     };
   
     Analytics.insert(gameAnalytics);
