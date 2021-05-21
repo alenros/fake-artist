@@ -637,7 +637,7 @@ Template.lobby.events({
       if (firstPlayerIndex === fakeArtistIndex) {
         const percentFakeArtistisFirst = 10;
         const isFakeArtistStillFirst = Math.floor(Math.random() * 100) < percentFakeArtistisFirst;
-        console.log(`is still first: ${isFakeArtistStillFirst}`);
+
         if (!isFakeArtistStillFirst) {
           const otherPlayers = regularPlayers.map((player) => player);
 
@@ -784,7 +784,7 @@ Template.lobby.events({
       if (firstPlayerIndex === fakeArtistIndex) {
         let percentFakeArtistisFirst = 10;
         let isFakeArtistStillFirst = Math.floor(Math.random() * 100) < percentFakeArtistisFirst;
-        console.log(`is still first: ${isFakeArtistStillFirst}`);
+
         if (!isFakeArtistStillFirst) {
           const otherPlayers = currentPlayers.map((player) => player);
 
