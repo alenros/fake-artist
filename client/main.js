@@ -1,6 +1,6 @@
-﻿Handlebars.registerHelper('toCapitalCase', function (str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-});
+﻿Handlebars.registerHelper(
+    'toCapitalCase',
+    function(str) { return str.charAt(0).toUpperCase() + str.slice(1); });
 
 function initUserLanguage() {
   let language = amplify.store("language");
@@ -23,7 +23,7 @@ function getUserLanguage() {
 };
 
 function setUserLanguage(language) {
-  TAPi18n.setLanguage(language).done(function () {
+  TAPi18n.setLanguage(language).done(function() {
     Session.set("language", language);
     amplify.store("language", language);
   });
@@ -31,7 +31,7 @@ function setUserLanguage(language) {
 
 function getLanguageDirection() {
   let language = getUserLanguage()
-  let rtlLanguages = ['he', 'ar'];
+  let rtlLanguages = [ 'he', 'ar' ];
 
   if ($.inArray(language, rtlLanguages) !== -1) {
     return 'rtl';
@@ -59,14 +59,14 @@ function getRandomSubset(collection, n) {
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+    [a[i], a[j]] = [ a[j], a[i] ];
   }
   return a;
 }
 
 function getLanguageList() {
   let languages = TAPi18n.getLanguages();
-  let languageList = _.map(languages, function (value, key) {
+  let languageList = _.map(languages, function(value, key) {
     let selected = "";
 
     if (key == getUserLanguage()) {
@@ -79,11 +79,7 @@ function getLanguageList() {
       value.name = "ગુજરાતી";
     }
 
-    return {
-      code: key,
-      selected: selected,
-      languageDetails: value
-    };
+    return {code : key, selected : selected, languageDetails : value};
   });
 
   if (languageList.length <= 1) {
@@ -133,13 +129,13 @@ function generateAccessCode() {
 
 function generateNewGame() {
   let game = {
-    accessCode: generateAccessCode(),
-    state: "waitingForPlayers",
-    word: null,
-    lengthInMinutes: 10,
-    endTime: null,
-    paused: false,
-    pausedTime: null
+    accessCode : generateAccessCode(),
+    state : "waitingForPlayers",
+    word : null,
+    lengthInMinutes : 10,
+    endTime : null,
+    paused : false,
+    pausedTime : null
   };
 
   let gameID = Games.insert(game);
@@ -150,12 +146,12 @@ function generateNewGame() {
 
 function generateNewPlayer(game, name) {
   let player = {
-    gameID: game._id,
-    name: name,
-    category: null,
-    isQuestionMaster: false,
-    isFakeArtist: false,
-    isFirstPlayer: false
+    gameID : game._id,
+    name : name,
+    category : null,
+    isQuestionMaster : false,
+    isFakeArtist : false,
+    isFirstPlayer : false
   };
 
   let playerID = Players.insert(player);
@@ -167,29 +163,29 @@ function getWordsProvider() {
   let words = [];
 
   switch (getUserLanguage()) {
-    case "he":
-      words = words_he;
-      break;
-    case "en":
-      words = words_en;
-      break;
-    case "de":
-      words = words_de;
-      break;
-    case "it":
-      words = words_it;
-      break;      
-    default:
-      words = words_en;
-      break;
+  case "he":
+    words = words_he;
+    break;
+  case "en":
+    words = words_en;
+    break;
+  case "de":
+    words = words_de;
+    break;
+  case "it":
+    words = words_it;
+    break;
+  default:
+    words = words_en;
+    break;
   };
 
   let minimumWordsInCategory = 10;
 
   let excludedCategories = [];
 
-
-  let filteredWords = words.filter(word => !excludedCategories.includes(word.category.toLowerCase()));
+  let filteredWords = words.filter(
+      word => !excludedCategories.includes(word.category.toLowerCase()));
 
   let categoryToOccurences = {};
 
@@ -197,14 +193,14 @@ function getWordsProvider() {
     let wordOccurence = categoryToOccurences[word.category];
     if (wordOccurence === undefined) {
       wordOccurence = 1;
-    }
-    else {
+    } else {
       wordOccurence = wordOccurence + 1;
     }
     categoryToOccurences[word.category] = wordOccurence;
   });
 
-  filteredWords = filteredWords.filter(word => categoryToOccurences[word.category] >= minimumWordsInCategory);
+  filteredWords = filteredWords.filter(
+      word => categoryToOccurences[word.category] >= minimumWordsInCategory);
 
   return filteredWords;
 }
@@ -267,13 +263,13 @@ function leaveGame() {
 
   let game = getCurrentGame();
   let currentTimeRemaining = getTimeRemaining();
-  let players = Array.from(Players.find({ gameID: game._id }));
-  
+  let players = Array.from(Players.find({gameID : game._id}));
+
   let gameAnalytics = {
-    gameID: game._id,
-    playerCount: players.length,
-    timeLeft: currentTimeRemaining / 1000 / 60,
-    status: 'left game',
+    gameID : game._id,
+    playerCount : players.length,
+    timeLeft : currentTimeRemaining / 1000 / 60,
+    status : 'left game',
   };
 
   Analytics.insert(gameAnalytics);
@@ -290,9 +286,7 @@ function hasHistoryApi() {
 
 initUserLanguage();
 
-Meteor.setInterval(() => {
-  Session.set('time', new Date());
-}, 1000);
+Meteor.setInterval(() => { Session.set('time', new Date()); }, 1000);
 
 if (hasHistoryApi()) {
   function trackUrlState() {
@@ -314,54 +308,40 @@ if (hasHistoryApi()) {
 }
 Tracker.autorun(trackGameState);
 
-FlashMessages.configure({
-  autoHide: true,
-  autoScroll: false
-});
+FlashMessages.configure({autoHide : true, autoScroll : false});
 
 Template.main.helpers({
-  whichView() {
-    return Session.get('currentView');
-  },
-  language() {
-    return getUserLanguage();
-  },
-  textDirection() {
-    return getLanguageDirection();
-  },
+  whichView() { return Session.get('currentView'); },
+  language() { return getUserLanguage(); },
+  textDirection() { return getLanguageDirection(); },
 });
 
-Template.footer.helpers({
-  languages: getLanguageList
-});
+Template.footer.helpers({languages : getLanguageList});
 
 Template.footer.events({
-  'click .btn-set-language': function (event) {
+  'click .btn-set-language' : function(event) {
     let language = $(event.target).data('language');
     setUserLanguage(language);
   },
-  'change .language-select': function (event) {
+  'change .language-select' : function(event) {
     let language = event.target.value;
     setUserLanguage(language);
   }
 });
 
 Template.startMenu.events({
-  'click #btn-new-game': function () {
+  'click #btn-new-game' : function() {
     Session.set("currentView", "createGame");
-    let referrer  = document.referrer;
-    let referrerAnalytics = {
-      cameFrom: referrer,
-      action: "New Game"
-    };
+    let referrer = document.referrer;
+    let referrerAnalytics = {cameFrom : referrer, action : "New Game"};
 
     Analytics.insert(referrerAnalytics);
   },
-  'click #btn-join-game': function () {
-    let referrer  = document.referrer;
+  'click #btn-join-game' : function() {
+    let referrer = document.referrer;
     let referrerAnalytics = {
-        cameFrom: referrer,
-        action: "Join Game",
+      cameFrom : referrer,
+      action : "Join Game",
     };
 
     Analytics.insert(referrerAnalytics);
@@ -370,25 +350,18 @@ Template.startMenu.events({
   }
 });
 
-Template.startMenu.helpers({
-  alternativeURL() {
-    return Meteor.settings.public.alternative;
-  }
-});
+Template.startMenu.helpers(
+    {alternativeURL() { return Meteor.settings.public.alternative; }});
 
-Template.startMenu.rendered = function () {
-  let referrer  = document.referrer;
-  let referrerAnalytics = {
-      cameFrom: referrer,
-      action: "Start Page"
-  };
+Template.startMenu.rendered = function() {
+  let referrer = document.referrer;
+  let referrerAnalytics = {cameFrom : referrer, action : "Start Page"};
   Analytics.insert(referrerAnalytics);
   resetUserState();
 };
 
 Template.createGame.events({
-  'submit #create-game': function (event) {
-
+  'submit #create-game' : function(event) {
     let playerName = event.target.playerName.value;
 
     if (!playerName) {
@@ -412,24 +385,19 @@ Template.createGame.events({
 
     return false;
   },
-  'click .btn-back': function () {
+  'click .btn-back' : function() {
     Session.set("currentView", "startMenu");
     return false;
   }
 });
 
-Template.createGame.helpers({
-  isLoading: function () {
-    return Session.get('loading');
-  }
-});
+Template.createGame.helpers(
+    {isLoading : function() { return Session.get('loading'); }});
 
-Template.createGame.rendered = function (event) {
-  $("#player-name").focus();
-};
+Template.createGame.rendered = function(event) { $("#player-name").focus(); };
 
 Template.joinGame.events({
-  'submit #join-game': function (event) {
+  'submit #join-game' : function(event) {
     let accessCode = event.target.accessCode.value;
     let playerName = event.target.playerName.value;
 
@@ -445,20 +413,18 @@ Template.joinGame.events({
     Meteor.subscribe('games', accessCode, function onReady() {
       Session.set("loading", false);
 
-      let game = Games.findOne({
-        accessCode: accessCode
-      });
+      let game = Games.findOne({accessCode : accessCode});
 
       if (game) {
         Meteor.subscribe('players', game._id);
         let player = generateNewPlayer(game, playerName);
 
-        let referrer  = document.referrer;
+        let referrer = document.referrer;
         let referrerAnalytics = {
-            cameFrom: referrer,
-            action: "Join Game",
+          cameFrom : referrer,
+          action : "Join Game",
         };
-      
+
         Analytics.insert(referrerAnalytics);
         Session.set('urlAccessCode', null);
         Session.set("gameID", game._id);
@@ -471,27 +437,23 @@ Template.joinGame.events({
 
     return false;
   },
-  'click .btn-back': function () {
+  'click .btn-back' : function() {
     Session.set('urlAccessCode', null);
     Session.set("currentView", "startMenu");
     return false;
   }
 });
 
-Template.joinGame.helpers({
-  isLoading: function () {
-    return Session.get('loading');
-  }
-});
+Template.joinGame.helpers(
+    {isLoading : function() { return Session.get('loading'); }});
 
-
-Template.joinGame.rendered = function (event) {
+Template.joinGame.rendered = function(event) {
   resetUserState();
 
-  let referrer  = document.referrer;
+  let referrer = document.referrer;
   let referrerAnalytics = {
-      cameFrom: referrer,
-      action: "Join Game",
+    cameFrom : referrer,
+    action : "Join Game",
   };
 
   Analytics.insert(referrerAnalytics);
@@ -508,16 +470,10 @@ Template.joinGame.rendered = function (event) {
 };
 
 Template.lobby.helpers({
-  game: function () {
-    return getCurrentGame();
-  },
-  accessLink: function () {
-    return getAccessLink();
-  },
-  player: function () {
-    return getCurrentPlayer();
-  },
-  players: function () {
+  game : function() { return getCurrentGame(); },
+  accessLink : function() { return getAccessLink(); },
+  player : function() { return getCurrentPlayer(); },
+  players : function() {
     let game = getCurrentGame();
     let currentPlayer = getCurrentPlayer();
 
@@ -525,9 +481,11 @@ Template.lobby.helpers({
       return null;
     }
 
-    let players = Players.find({ 'gameID': game._id }, { 'sort': { 'createdAt': 1 } }).fetch();
+    let players =
+        Players.find({'gameID' : game._id}, {'sort' : {'createdAt' : 1}})
+            .fetch();
 
-    players.forEach(function (player) {
+    players.forEach(function(player) {
       if (player._id === currentPlayer._id) {
         player.isCurrent = true;
       }
@@ -538,8 +496,8 @@ Template.lobby.helpers({
 });
 
 Template.lobby.events({
-  'click .btn-leave': leaveGame,
-  'click .btn-submit-user-word': function (event) {
+  'click .btn-leave' : leaveGame,
+  'click .btn-submit-user-word' : function(event) {
     let game = getCurrentGame();
     let word = document.getElementById("user-word").value;
     let category = document.getElementById("user-category").value;
@@ -548,14 +506,16 @@ Template.lobby.events({
     }
     // Track words submittd by users
     let userWord = {
-      word: word,
-      category: category,
-      language: Session.get("language")
+      word : word,
+      category : category,
+      language : Session.get("language")
     };
 
     let questionMasterId = $(event.currentTarget).data('player-id');
-    let currentPlayers = Array.from(Players.find({ gameID: game._id }, { _id: { $ne: questionMasterId } }));
-    let regularPlayers = currentPlayers.filter(player => player._id != questionMasterId);
+    let currentPlayers = Array.from(
+        Players.find({gameID : game._id}, {_id : {$ne : questionMasterId}}));
+    let regularPlayers =
+        currentPlayers.filter(player => player._id != questionMasterId);
 
     let localEndTime = moment().add(game.lengthInMinutes, 'minutes');
     let gameEndTime = TimeSync.serverTime(localEndTime);
@@ -567,36 +527,38 @@ Template.lobby.events({
 
     UserWords.insert(userWord);
 
-    regularPlayers.forEach(function (player, index) {
-      turnOrders.push(index + 1);
-    });
+    regularPlayers.forEach(function(player,
+                                    index) { turnOrders.push(index + 1); });
 
     turnOrders = shuffle(turnOrders);
 
-    regularPlayers.forEach(function (player, index) {
+    regularPlayers.forEach(function(player, index) {
       Players.update(player._id, {
-        $set: {
-          isQuestionMaster: false,
-          isFakeArtist: index === fakeArtistIndex,
-          isFirstPlayer: index === firstPlayerIndex,
-          turnOrder: turnOrders[index]
+        $set : {
+          isQuestionMaster : false,
+          isFakeArtist : index === fakeArtistIndex,
+          isFirstPlayer : index === firstPlayerIndex,
+          turnOrder : turnOrders[index]
         }
       });
     });
 
-     // All Fake Artist Variant
-    let shouldPlayAllFakeArtistsVariant = document.getElementById("use-all-fake-artists-variant").checked;
+    // All Fake Artist Variant
+    let shouldPlayAllFakeArtistsVariant =
+        document.getElementById("use-all-fake-artists-variant").checked;
 
     let percentEveryoneIsAFakeArtist = 10;
-    let isEveryoneAFakeArtist = Math.floor(Math.random() * 100) < percentEveryoneIsAFakeArtist;
+    let isEveryoneAFakeArtist =
+        Math.floor(Math.random() * 100) < percentEveryoneIsAFakeArtist;
 
-    let isAllFakeArtistsVariantActive = shouldPlayAllFakeArtistsVariant && isEveryoneAFakeArtist;
+    let isAllFakeArtistsVariantActive =
+        shouldPlayAllFakeArtistsVariant && isEveryoneAFakeArtist;
     if (isAllFakeArtistsVariantActive) {
       currentPlayers.forEach((player) => {
         if (player.isQuestionMaster === false) {
           Players.update(player._id, {
-            $set: {
-              isFakeArtist: true,
+            $set : {
+              isFakeArtist : true,
             }
           });
         }
@@ -605,18 +567,21 @@ Template.lobby.events({
     // All Fake Artists variant ends
 
     // No Fake Artist Variant
-    const shouldPlayNoFakeArtistsVariant = document.getElementById('use-no-fake-artist-variant').checked;
+    const shouldPlayNoFakeArtistsVariant =
+        document.getElementById('use-no-fake-artist-variant').checked;
 
     const percentNoFakeArtist = 10;
-    const isNoFakeArtist = Math.floor(Math.random() * 100) < percentNoFakeArtist;
+    const isNoFakeArtist =
+        Math.floor(Math.random() * 100) < percentNoFakeArtist;
 
-    let isNoFakeArtistsVariantActive = shouldPlayNoFakeArtistsVariant && isNoFakeArtist;
+    let isNoFakeArtistsVariantActive =
+        shouldPlayNoFakeArtistsVariant && isNoFakeArtist;
     if (isNoFakeArtistsVariantActive) {
       currentPlayers.forEach((player) => {
         if (player.isQuestionMaster === false) {
           Players.update(player._id, {
-            $set: {
-              isFakeArtist: false,
+            $set : {
+              isFakeArtist : false,
             },
           });
         }
@@ -632,14 +597,15 @@ Template.lobby.events({
       variantsUsed.push('all fake-artists');
     }
 
-    const shouldPlayLessFirstFakeArtistsVariant = document.getElementById('use-less-first-fake-artist-variant').checked;
+    const shouldPlayLessFirstFakeArtistsVariant =
+        document.getElementById('use-less-first-fake-artist-variant').checked;
 
-    if (shouldPlayLessFirstFakeArtistsVariant
-          && !isAllFakeArtistsVariantActive
-          && !isNoFakeArtistsVariantActive) {
+    if (shouldPlayLessFirstFakeArtistsVariant &&
+        !isAllFakeArtistsVariantActive && !isNoFakeArtistsVariantActive) {
       if (firstPlayerIndex === fakeArtistIndex) {
         const percentFakeArtistisFirst = 10;
-        const isFakeArtistStillFirst = Math.floor(Math.random() * 100) < percentFakeArtistisFirst;
+        const isFakeArtistStillFirst =
+            Math.floor(Math.random() * 100) < percentFakeArtistisFirst;
 
         if (!isFakeArtistStillFirst) {
           const otherPlayers = regularPlayers.map((player) => player);
@@ -648,19 +614,21 @@ Template.lobby.events({
 
           const newFirstPlayer = getRandomSubset(otherPlayers, 1)[0];
 
-          const nonFirstPlayers = regularPlayers.filter((player) => player._id != newFirstPlayer._id);
+          const nonFirstPlayers = regularPlayers.filter(
+              (player) => player._id != newFirstPlayer._id);
 
           // Shuffle
-          const playersByTurnOrder = getRandomSubset(nonFirstPlayers, nonFirstPlayers.length);
+          const playersByTurnOrder =
+              getRandomSubset(nonFirstPlayers, nonFirstPlayers.length);
 
           // insert newFirstPlayer at start
           playersByTurnOrder.splice(0, 0, newFirstPlayer);
 
           playersByTurnOrder.forEach((player, index) => {
             Players.update(player._id, {
-              $set: {
-                isFirstPlayer: index === 0,
-                turnOrder: index + 1,
+              $set : {
+                isFirstPlayer : index === 0,
+                turnOrder : index + 1,
               },
             });
           });
@@ -673,42 +641,48 @@ Template.lobby.events({
     }
 
     Players.update(questionMasterId, {
-      $set: {
-        isQuestionMaster: true,
-        isFakeArtist: false,
-        isFirstPlayer: false,
+      $set : {
+        isQuestionMaster : true,
+        isFakeArtist : false,
+        isFirstPlayer : false,
       }
     });
 
-    currentPlayers.forEach((player) => {
-      Players.update(player._id, { $set: { category } });
-    });
+    currentPlayers.forEach(
+        (player) => { Players.update(player._id, {$set : {category}}); });
 
-    Players.update(questionMasterId, { $set: { category: category } });
+    Players.update(questionMasterId, {$set : {category : category}});
 
-    let wordAndCategory = {
-      text: word, category: category
-    };
+    let wordAndCategory = {text : word, category : category};
 
     let gameAnalytics = {
-      gameID: game._id,
-      playerCount: currentPlayers.length,
-      gameType: "user-word",
-      language: Session.get("language"),
-      variants: variantsUsed,
-      word: word,
+      gameID : game._id,
+      playerCount : currentPlayers.length,
+      gameType : "user-word",
+      language : Session.get("language"),
+      variants : variantsUsed,
+      word : word,
     };
 
     Analytics.insert(gameAnalytics);
 
-    Games.update(game._id, { $set: { state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null, usingAllFakeArtistsVariant: shouldPlayNoFakeArtistsVariant, usingNoFakeArist: shouldPlayNoFakeArtistsVariant } });
+    Games.update(game._id, {
+      $set : {
+        state : 'inProgress',
+        word : wordAndCategory,
+        endTime : gameEndTime,
+        paused : false,
+        pausedTime : null,
+        usingAllFakeArtistsVariant : shouldPlayNoFakeArtistsVariant,
+        usingNoFakeArist : shouldPlayNoFakeArtistsVariant
+      }
+    });
   },
-  'click .btn-start': function () {
-
+  'click .btn-start' : function() {
     let game = getCurrentGame();
     let wordAndCategory = getRandomWordAndCategory();
-    
-    let currentPlayers = Array.from(Players.find({ gameID: game._id }));
+
+    let currentPlayers = Array.from(Players.find({gameID : game._id}));
     let localEndTime = moment().add(game.lengthInMinutes, 'minutes');
     let gameEndTime = TimeSync.serverTime(localEndTime);
 
@@ -717,7 +691,7 @@ Template.lobby.events({
 
     let turnOrders = []
 
-    let i = 0;
+        let i = 0;
     while (turnOrders.length < currentPlayers.length) {
       turnOrders.push(i);
       i = i + 1;
@@ -727,41 +701,47 @@ Template.lobby.events({
 
     currentPlayers.forEach((player, index) => {
       Players.update(player._id, {
-        $set: {
-          isQuestionMaster: false,
-          isFakeArtist: index === fakeArtistIndex,
-          isFirstPlayer: index === firstPlayerIndex,
-          turnOrder: turnOrders[index] + 1,
+        $set : {
+          isQuestionMaster : false,
+          isFakeArtist : index === fakeArtistIndex,
+          isFirstPlayer : index === firstPlayerIndex,
+          turnOrder : turnOrders[index] + 1,
         }
       });
     });
 
     currentPlayers.forEach((player) => {
-      Players.update(player._id, { $set: { category: wordAndCategory.category } });
+      Players.update(player._id,
+                     {$set : {category : wordAndCategory.category}});
     });
 
     // All Fake Artist Variant
-    let shouldPlayAllFakeArtistsVariant = document.getElementById("use-all-fake-artists-variant").checked;
+    let shouldPlayAllFakeArtistsVariant =
+        document.getElementById("use-all-fake-artists-variant").checked;
 
     let percentEveryoneIsAFakeArtist = 10;
-    let isEveryoneAFakeArtist = Math.floor(Math.random() * 100) < percentEveryoneIsAFakeArtist;
+    let isEveryoneAFakeArtist =
+        Math.floor(Math.random() * 100) < percentEveryoneIsAFakeArtist;
 
-    if (shouldPlayAllFakeArtistsVariant == true && isEveryoneAFakeArtist == true) {
+    if (shouldPlayAllFakeArtistsVariant == true &&
+        isEveryoneAFakeArtist == true) {
       currentPlayers.forEach((player) => {
         if (player.isQuestionMaster == false) {
           Players.update(player._id, {
-            $set: {
-              isFakeArtist: true,
+            $set : {
+              isFakeArtist : true,
             }
           });
         }
       });
     }
-    let isAllFakeArtistsVariantActive = shouldPlayAllFakeArtistsVariant && isEveryoneAFakeArtist;
+    let isAllFakeArtistsVariantActive =
+        shouldPlayAllFakeArtistsVariant && isEveryoneAFakeArtist;
     // All Fake Artists variant ends
 
     // No Fake Artist Variant
-    let shouldPlayNoFakeArtistsVariant = document.getElementById("use-no-fake-artist-variant").checked;
+    let shouldPlayNoFakeArtistsVariant =
+        document.getElementById("use-no-fake-artist-variant").checked;
 
     let percentNoFakeArtist = 10;
     let isNoFakeArtist = Math.floor(Math.random() * 100) < percentNoFakeArtist;
@@ -770,23 +750,27 @@ Template.lobby.events({
       currentPlayers.forEach((player) => {
         if (player.isQuestionMaster == false) {
           Players.update(player._id, {
-            $set: {
-              isFakeArtist: false,
+            $set : {
+              isFakeArtist : false,
             }
           });
         }
       });
     }
-    let isNoFakeArtistsVariantActive = shouldPlayNoFakeArtistsVariant && isNoFakeArtist;
+    let isNoFakeArtistsVariantActive =
+        shouldPlayNoFakeArtistsVariant && isNoFakeArtist;
     // No Fake Artist Variant ends
 
     // Fake Artist Less First variant
-    let shouldPlayLessFirstFakeArtistsVariant = document.getElementById('use-less-first-fake-artist-variant').checked;
+    let shouldPlayLessFirstFakeArtistsVariant =
+        document.getElementById('use-less-first-fake-artist-variant').checked;
 
-    if (shouldPlayLessFirstFakeArtistsVariant && !isAllFakeArtistsVariantActive && !isNoFakeArtistsVariantActive) {
+    if (shouldPlayLessFirstFakeArtistsVariant &&
+        !isAllFakeArtistsVariantActive && !isNoFakeArtistsVariantActive) {
       if (firstPlayerIndex === fakeArtistIndex) {
         let percentFakeArtistisFirst = 10;
-        let isFakeArtistStillFirst = Math.floor(Math.random() * 100) < percentFakeArtistisFirst;
+        let isFakeArtistStillFirst =
+            Math.floor(Math.random() * 100) < percentFakeArtistisFirst;
 
         if (!isFakeArtistStillFirst) {
           const otherPlayers = currentPlayers.map((player) => player);
@@ -795,19 +779,21 @@ Template.lobby.events({
 
           const newFirstPlayer = getRandomSubset(otherPlayers, 1)[0];
 
-          const nonFirstPlayers = currentPlayers.filter((player) => player._id != newFirstPlayer._id);
+          const nonFirstPlayers = currentPlayers.filter(
+              (player) => player._id != newFirstPlayer._id);
 
           // Shuffle
-          const playersByTurnOrder = getRandomSubset(nonFirstPlayers, nonFirstPlayers.length);
+          const playersByTurnOrder =
+              getRandomSubset(nonFirstPlayers, nonFirstPlayers.length);
 
           // insert newFirstPlayer at start
           playersByTurnOrder.splice(0, 0, newFirstPlayer);
 
           playersByTurnOrder.forEach((player, index) => {
             Players.update(player._id, {
-              $set: {
-                isFirstPlayer: index === 0,
-                turnOrder: index + 1,
+              $set : {
+                isFirstPlayer : index === 0,
+                turnOrder : index + 1,
               },
             });
           });
@@ -829,23 +815,27 @@ Template.lobby.events({
 
     // Track game analytics
     let gameAnalytics = {
-      gameID: game._id,
-      playerCount: currentPlayers.length,
-      gameType: "game-word",
-      language: Session.get("language"),
-      languageType: "Chosen",
-      variants: variantsUsed
+      gameID : game._id,
+      playerCount : currentPlayers.length,
+      gameType : "game-word",
+      language : Session.get("language"),
+      languageType : "Chosen",
+      variants : variantsUsed
     };
 
     Analytics.insert(gameAnalytics);
 
     Games.update(game._id, {
-      $set: {
-        state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null,
+      $set : {
+        state : 'inProgress',
+        word : wordAndCategory,
+        endTime : gameEndTime,
+        paused : false,
+        pausedTime : null,
       },
     });
   },
-  'click #copyAccessLinkImg': function () {
+  'click #copyAccessLinkImg' : function() {
     const accessLink = `https://fake-artist.herokuapp.com/${getAccessLink()}`;
 
     const textArea = document.createElement("textarea");
@@ -857,38 +847,37 @@ Template.lobby.events({
     document.body.removeChild(textArea);
 
     let tooltip = document.getElementById("copyAccessLinkTooltip");
-   
+
     tooltip.innerHTML = TAPi18n.__("ui.copied");
   },
-  'mouseout #copyAccessLinkImg': function () {
+  'mouseout #copyAccessLinkImg' : function() {
     let tooltip = document.getElementById("copyAccessLinkTooltip");
 
-    tooltip.innerHTML = TAPi18n.__("ui.copy access link");;
+    tooltip.innerHTML = TAPi18n.__("ui.copy access link");
+    ;
   },
-  'click .btn-toggle-qrcode': function () {
-    $(".qrcode-container").toggle();
-  },
-  'click .btn-remove-player': function (event) {
+  'click .btn-toggle-qrcode' : function() { $(".qrcode-container").toggle(); },
+  'click .btn-remove-player' : function(event) {
     let playerID = $(event.currentTarget).data('player-id');
     Players.remove(playerID);
   },
-  'click .btn-edit-player': function (event) {
+  'click .btn-edit-player' : function(event) {
     let game = getCurrentGame();
     resetUserState();
     Session.set('urlAccessCode', game.accessCode);
     Session.set('currentView', 'joinGame');
   },
-  'click .btn-bad-category': function () {
+  'click .btn-bad-category' : function() {
     console.log('got a bad category');
     console.log('game.wordAndCategory.category');
   },
-  'click .btn-bad-word': function () {
+  'click .btn-bad-word' : function() {
     console.log('got a bad word');
     console.log('game.wordAndCategory.text');
   }
 });
 
-Template.lobby.rendered = function (event) {
+Template.lobby.rendered = function(event) {
   let url = getAccessLink();
   url = `https://fake-artist.herokuapp.com/${url}`;
   const qrcodesvg = new Qrcodesvg(url, 'qrcode', 250);
@@ -914,8 +903,8 @@ function getTimeRemaining() {
 }
 
 Template.gameView.helpers({
-  game: getCurrentGame,
-  player: getCurrentPlayer,
+  game : getCurrentGame,
+  player : getCurrentPlayer,
   players() {
     const game = getCurrentGame();
 
@@ -923,15 +912,11 @@ Template.gameView.helpers({
       return null;
     }
 
-    let players = Players.find({
-      'gameID': game._id
-    });
+    let players = Players.find({'gameID' : game._id});
 
     return players;
   },
-  words() {
-    return words_en;
-  },
+  words() { return words_en; },
   gameFinished() {
     const timeRemaining = getTimeRemaining();
 
@@ -945,36 +930,38 @@ Template.gameView.helpers({
 });
 
 Template.gameView.events({
-  'click .btn-leave': leaveGame,
-  'click .btn-end': function () {
+  'click .btn-leave' : leaveGame,
+  'click .btn-end' : function() {
     let game = getCurrentGame();
-    Games.update(game._id, { $set: { state: 'waitingForPlayers' } });
+    Games.update(game._id, {$set : {state : 'waitingForPlayers'}});
 
     let currentTimeRemaining = getTimeRemaining();
 
-    let players = Array.from(Players.find({ gameID: game._id }));
+    let players = Array.from(Players.find({gameID : game._id}));
 
     let gameAnalytics = {
-      gameID: game._id,
-      playerCount: players.length,
-      timeLeft: currentTimeRemaining / 1000 / 60,
-      status: 'game ended',
+      gameID : game._id,
+      playerCount : players.length,
+      timeLeft : currentTimeRemaining / 1000 / 60,
+      status : 'game ended',
     };
-  
+
     Analytics.insert(gameAnalytics);
   },
-  'click .btn-toggle-status': function () {
-    $(".status-container-content").toggle();
-  },
-  'click .game-countdown': function () {
+  'click .btn-toggle-status' :
+      function() { $(".status-container-content").toggle(); },
+  'click .game-countdown' : function() {
     let game = getCurrentGame();
     let currentServerTime = TimeSync.serverTime(moment());
 
     if (game.paused) {
       let newEndTime = game.endTime - game.pausedTime + currentServerTime;
-      Games.update(game._id, { $set: { paused: false, pausedTime: null, endTime: newEndTime } });
+      Games.update(
+          game._id,
+          {$set : {paused : false, pausedTime : null, endTime : newEndTime}});
     } else {
-      Games.update(game._id, { $set: { paused: true, pausedTime: currentServerTime } });
+      Games.update(game._id,
+                   {$set : {paused : true, pausedTime : currentServerTime}});
     }
   }
 });
