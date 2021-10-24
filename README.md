@@ -27,8 +27,14 @@ The words lists are in the \lib\ directory. to add a new wordlist you should add
 The UI translations are in the \i18n\ directory. To add a new UI translation simply copy the English (en.i18n.json), rename the file prefix with the language code you want to translate
 and change the translated strings on the right side.
 
+
 # Credits
 I can code but can't draw, so all the art of the game come from the artists of [The Noun Project](https://thenounproject.com/)
 Art by Will Deskins from the Noun Project
 Fake Mustache by Claire Jones from the Noun Project
 Salvador Dali by Simon Child from the Noun Project
+
+Translators:
+* [Johannes Fischer](https://github.com/JohannesFischer)
+* [Raphael Alexio](https://github.com/raphaelaleixo)
+* [Francesco T](https://www.boardgamegeek.com/user/omnigod)
