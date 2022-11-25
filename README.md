@@ -15,11 +15,22 @@ The original boardgame at BoardGameGeek: https://boardgamegeek.com/boardgame/135
 # Running Your Copy
 Feel free to contact me if you want help running your own instance. I have more detailed explnation of how to deploy the app in the works.
 
-Requirements:
-MeteorJS
-NodeJS
+First step - clone this repo.
 
-To start the application, simply run 'meteor' from the directory in which you cloned the repository. You will then be able to access the application from localhost:3000.
+Install Meteor by running:
+`curl https://install.meteor.com/ | sh`
+
+Set the following to workaround the expired Meteor SSL certificate:
+`export NODE_TLS_REJECT_UNAUTHORIZED=0`
+
+If you want to use your own MongoDB set environment variable:
+`export DB_URI=mongodb+srv://your_mongo_instance`
+
+Set the URL of your applciation:
+`export ROOT_URL=https://your-url.com
+
+And finally run the following in the directory you have clone the repository: 
+`meteor`
 
 # Translation
 The translation has two parts: the user interface and the words list.
