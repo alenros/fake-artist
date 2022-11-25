@@ -27,7 +27,7 @@ If you want to use your own MongoDB set environment variable:
 `export DB_URI=mongodb+srv://your_mongo_instance`
 
 Set the URL of your applciation:
-`export ROOT_URL=https://your-url.com
+`export ROOT_URL=https://your-url.com`
 
 And finally run the following in the directory you have clone the repository: 
 `meteor`
