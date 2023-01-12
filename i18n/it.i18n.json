@@ -39,7 +39,7 @@
         "footer": "Applicazione basata sull' applicazione meteor di Spyfall:",
         "credits": "Gioco pubblicato da ",
         "Author": "Hai trovato un bug? Hai un suggerimento? Mandami un messaggio privato su BGG a: ",
-        "TranslationCredits": "Italiano: <a href='https://boardgamegeek.com/user/omnigod'>omnigod@BGG</a>",
+        "translation credits": "Traduzione italiana a cura di <a href='https://boardgamegeek.com/user/omnigod'>omnigod</a>. In caso di errori, mandatemi una geekmail <a href='https://boardgamegeek.com/geekmail/compose?touser=omnigod'>omnigod@BGG</a>.",
 	"logo-file": "logo-en.png",
 	"locations-file":"locations_en",
 	"enter word":"Inserisci la tua Parola",
