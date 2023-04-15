@@ -178,11 +178,14 @@ function getWordsProvider() {
       break;
     case "it":
       words = words_it;
-      break;      
+      break;
+    case "es":
+      words = words_es;
+      break;
     default:
       words = words_en;
       break;
-  };
+  }
 
   let minimumWordsInCategory = 10;
 
