@@ -49,3 +49,4 @@ Translators:
 * [Johannes Fischer](https://github.com/JohannesFischer)
 * [Raphael Alexio](https://github.com/raphaelaleixo)
 * [Francesco T](https://www.boardgamegeek.com/user/omnigod)
+* [Camilo Sampedro](https://github.com/camilosampedro)
