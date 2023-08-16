@@ -5,8 +5,6 @@
 
 This player aid for A Fake Artist Goes to New York eliminates the need for a Question master and lets everyone participate.
 
-This code powers https://fake-artist.herokuapp.com - where you can play the game.
-
 It is based on [Evan Brumley's](https://github.com/evanbrumley) Spyfall game.
 
 The original boardgame at BoardGameGeek: https://boardgamegeek.com/boardgame/135779/fake-artist-goes-new-york
@@ -32,6 +30,9 @@ Set the URL of your applciation:
 And finally run the following in the directory you have clone the repository: 
 `meteor`
 
+To choose a port for your application use the following:
+`meteor --port 3000`
+
 # Translation
 The translation has two parts: the user interface and the words list.
 The words lists are in the \lib\ directory. to add a new wordlist you should add it in main.js in the getRandomWordAndCategory();
@@ -50,3 +51,4 @@ Translators:
 * [Raphael Alexio](https://github.com/raphaelaleixo)
 * [Francesco T](https://www.boardgamegeek.com/user/omnigod)
 * [Camilo Sampedro](https://github.com/camilosampedro)
+* [Fabio Barbero](https://fabiobarbero.eu)
