@@ -18,6 +18,13 @@ function getUserLanguage() {
   if (language) {
     return language;
   } else {
+    // select browser language if supported
+    let browserLanguage = window.navigator.userLanguage || window.navigator.language;
+    let supportedLanguages = TAPi18n.getLanguages();
+    console.log("browserLanguage", browserLanguage);
+    if (supportedLanguages[browserLanguage]) {
+      return browserLanguage;
+    }
     return "en";
   }
 };
