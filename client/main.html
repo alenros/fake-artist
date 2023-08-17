@@ -58,7 +58,7 @@
       <button id="btn-join-game">{{_ "ui.join game" }}</button>
     </div>
     <div>
-      <a href="https://insider.herokuapp.com"><strong>{{_ "ui.try insider"}}</strong></a>
+      <a href="https://github.com/alenros/insider"><strong>{{_ "ui.try insider"}}</strong></a>
     </div>
     {{# if alternativeURL }}
     <p class="high-load-message">The site is currently experiencing very heavy load. If things seem slow or broken, try
@@ -94,7 +94,7 @@
     <span class="access-button-separator"></span>
 
     <a class="access-button btn-send-access-code-email"
-      href='mailto:?subject={{_ "ui.join my game" }}&body=https://fake-artist.herokuapp.com/{{ accessLink }}'>
+      href='mailto:?subject={{_ "ui.join my game" }}&body={{ accessLink }}'>
       <img src="/icons/envelope-open.svg" class="icon" />
     </a>
   </div>
@@ -103,7 +103,7 @@
     <div id="qrcode" class="qrcode"></div>
 
     <div id="access-link" class="access-link">
-      <a href="{{ accessLink }}">https://fake-artist.herokuapp.com/{{ accessLink }}</a>
+      <a href="{{ accessLink }}">{{ accessLink }}</a>
     </div>
   </div>
   <hr>

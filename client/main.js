@@ -525,7 +525,7 @@ Template.lobby.helpers({
     return getCurrentGame();
   },
   accessLink: function () {
-    return getAccessLink();
+    return Meteor.absoluteUrl() + getAccessLink();
   },
   player: function () {
     return getCurrentPlayer();
@@ -859,7 +859,7 @@ Template.lobby.events({
     });
   },
   'click #copyAccessLinkImg': function () {
-    const accessLink = `https://fake-artist.herokuapp.com/${getAccessLink()}`;
+    const accessLink = `${Meteor.absoluteUrl()}${getAccessLink()}`;
 
     const textArea = document.createElement("textarea");
     textArea.value = accessLink;
@@ -903,7 +903,7 @@ Template.lobby.events({
 
 Template.lobby.rendered = function (event) {
   let url = getAccessLink();
-  url = `https://fake-artist.herokuapp.com/${url}`;
+  url = `${Meteor.absoluteUrl()}${url}`;
   const qrcodesvg = new Qrcodesvg(url, 'qrcode', 250);
   qrcodesvg.draw();
 };
