@@ -40,14 +40,15 @@
         "Author": "Vous avez trouvé un bug ? Vous avez une suggestion ? Envoyez-moi un MP sur BGG : ",
         "logo-file": "logo-en.png",
         "locations-file": "locations_fr",
-        "enter word": "entrez votre mot",
-        "enter category": "entrez la catégorie du mot",
+        "enter word": "Entrez votre mot",
+        "enter category": "Entrez la catégorie du mot",
         "submit user word": "Utilisez ce mot !",
         "choose own word": "Utilisez votre propre mot",
-        "let us choose": "ou laissez-nous le choisir pour vous",
+        "let us choose": "Ou laissez-nous le choisir pour vous",
+        "choose categories": "Choisir categories: ",
         "translation credits": "Traduction par <a href=\"https://fabiobarbero.eu\">fabiobarbero.eu</a>",
-        "bad category": "signaler la catégorie",
-        "bad word": "signaler le mot",
+        "bad category": "Signaler la catégorie",
+        "bad word": "Signaler le mot",
         "github link": "https://github.com/alenros/fake-artist"
     }
 }

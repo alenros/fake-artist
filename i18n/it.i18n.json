@@ -46,6 +46,7 @@
         "submit user word": "Usa questa parola!",
         "choose own word": "Usa la tua parola",
         "let us choose": "Oppure lascia che scegliamo noi",
+        "choose categories": "Seleziona categorie: ",
         "bad category": "Segnala categoria non valida",
         "bad word": "Segnala parola non valida",
         "github link": "https://github.com/alenros/fake-artist"
