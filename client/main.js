@@ -18,6 +18,13 @@ function getUserLanguage() {
   if (language) {
     return language;
   } else {
+    // select browser language if supported
+    let browserLanguage = window.navigator.userLanguage || window.navigator.language;
+    let supportedLanguages = TAPi18n.getLanguages();
+    console.log("browserLanguage", browserLanguage);
+    if (supportedLanguages[browserLanguage]) {
+      return browserLanguage;
+    }
     return "en";
   }
 };
@@ -182,6 +189,9 @@ function getWordsProvider() {
     case "es":
       words = words_es;
       break;
+    case "fr":
+      words = words_fr;
+      break;
     default:
       words = words_en;
       break;
@@ -212,8 +222,9 @@ function getWordsProvider() {
   return filteredWords;
 }
 
-function getRandomWordAndCategory() {
-  let filteredWords = getWordsProvider();
+function getRandomWordAndCategory(excludedCategories) {
+  // heh, this should be optimized better.
+  let filteredWords = getWordsProvider().filter(word => !excludedCategories.includes(word.category));
   let wordIndex = Math.floor(Math.random() * filteredWords.length);
 
   return filteredWords[wordIndex];
@@ -515,10 +526,16 @@ Template.lobby.helpers({
     return getCurrentGame();
   },
   accessLink: function () {
-    return getAccessLink();
+    return Meteor.absoluteUrl() + getAccessLink();
   },
   player: function () {
     return getCurrentPlayer();
+  },
+  categories: function () {
+    let words = getWordsProvider();
+    const uniqueCategories = [...new Set(words.map(word => word.category))];
+
+    return uniqueCategories;
   },
   players: function () {
     let game = getCurrentGame();
@@ -542,6 +559,9 @@ Template.lobby.helpers({
 
 Template.lobby.events({
   'click .btn-leave': leaveGame,
+  'click .btn-toggle-category-select': function () {
+    $(".category-select").toggle();
+  },
   'click .btn-submit-user-word': function (event) {
     let game = getCurrentGame();
     let word = document.getElementById("user-word").value;
@@ -709,7 +729,9 @@ Template.lobby.events({
   'click .btn-start': function () {
 
     let game = getCurrentGame();
-    let wordAndCategory = getRandomWordAndCategory();
+    let excludedCategories = document.querySelectorAll('input[name="category-name"]:not(:checked)');
+    excludedCategories = Array.from(excludedCategories).map((category) => category.value);
+    let wordAndCategory = getRandomWordAndCategory(excludedCategories);
     
     let currentPlayers = Array.from(Players.find({ gameID: game._id }));
     let localEndTime = moment().add(game.lengthInMinutes, 'minutes');
@@ -849,7 +871,7 @@ Template.lobby.events({
     });
   },
   'click #copyAccessLinkImg': function () {
-    const accessLink = `https://fake-artist.herokuapp.com/${getAccessLink()}`;
+    const accessLink = `${Meteor.absoluteUrl()}${getAccessLink()}`;
 
     const textArea = document.createElement("textarea");
     textArea.value = accessLink;
@@ -893,7 +915,7 @@ Template.lobby.events({
 
 Template.lobby.rendered = function (event) {
   let url = getAccessLink();
-  url = `https://fake-artist.herokuapp.com/${url}`;
+  url = `${Meteor.absoluteUrl()}${url}`;
   const qrcodesvg = new Qrcodesvg(url, 'qrcode', 250);
   qrcodesvg.draw();
 };

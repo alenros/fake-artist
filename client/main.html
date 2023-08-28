@@ -6,6 +6,7 @@
   <link href="https://fonts.googleapis.com/css?family=Alef|Oswald|Open+Sans" rel="stylesheet" async media="none"
     onload="if(media!='all')media='all'">
 
+    <!-- these CSS hrefs are wrong, and styles.css doesn't exist. Not sure what's going on here -->
   <link rel="stylesheet" href="css/normalize.css" type="text/css" async media="none"
     onload="if(media!='all')media='all'">
   <link rel="stylesheet" href="css/skeleton.css" type="text/css" async media="none"
@@ -58,7 +59,7 @@
       <button id="btn-join-game">{{_ "ui.join game" }}</button>
     </div>
     <div>
-      <a href="https://insider.herokuapp.com"><strong>{{_ "ui.try insider"}}</strong></a>
+      <a href="https://github.com/alenros/insider"><strong>{{_ "ui.try insider"}}</strong></a>
     </div>
     {{# if alternativeURL }}
     <p class="high-load-message">The site is currently experiencing very heavy load. If things seem slow or broken, try
@@ -94,7 +95,7 @@
     <span class="access-button-separator"></span>
 
     <a class="access-button btn-send-access-code-email"
-      href='mailto:?subject={{_ "ui.join my game" }}&body=https://fake-artist.herokuapp.com/{{ accessLink }}'>
+      href='mailto:?subject={{_ "ui.join my game" }}&body={{ accessLink }}'>
       <img src="/icons/envelope-open.svg" class="icon" />
     </a>
   </div>
@@ -103,7 +104,7 @@
     <div id="qrcode" class="qrcode"></div>
 
     <div id="access-link" class="access-link">
-      <a href="{{ accessLink }}">https://fake-artist.herokuapp.com/{{ accessLink }}</a>
+      <a href="{{ accessLink }}">{{ accessLink }}</a>
     </div>
   </div>
   <hr>
@@ -174,17 +175,25 @@
       </td>
     </tr>
     <tr>
+      <td colspan="2">
+        {{_ "ui.choose categories"}}
+        <a class="btn-toggle-category-select" href="javascript:void(0);">{{_ "ui.show hide" }}</a>
+        <div class="category-select form-group" style="display: none;">
+          {{#each categories}}
+            <input type="checkbox" id="{{ this }}" name="category-name" value="{{ this }}" checked>
+            <label for="{{ this }}" style="display: inline;">{{ this }}</label>
+          {{/each}}
+        </div>
+      </td>
+    </tr>
+    <tr>
       <td>
         {{_ "ui.let us choose"}}
       </td>
       <td>
-
-
         <button class="btn-start">{{_ "ui.start game" }}</button>
-
       </td>
     </tr>
-
   </table>
 
   <div class="button-container">
