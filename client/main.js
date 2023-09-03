@@ -21,7 +21,7 @@ function getUserLanguage() {
     // select browser language if supported
     let browserLanguage = window.navigator.userLanguage || window.navigator.language;
     let supportedLanguages = TAPi18n.getLanguages();
-    console.log("browserLanguage", browserLanguage);
+
     if (supportedLanguages[browserLanguage]) {
       return browserLanguage;
     }
@@ -222,9 +222,12 @@ function getWordsProvider() {
   return filteredWords;
 }
 
-function getRandomWordAndCategory(excludedCategories) {
+function getRandomWordAndCategory(categoriesList) {
   // heh, this should be optimized better.
-  let filteredWords = getWordsProvider().filter(word => !excludedCategories.includes(word.category));
+  let filteredWords = getWordsProvider().filter(word => categoriesList.includes(word.category));
+  if (categoriesList.length === 0) {
+    filteredWords = getWordsProvider();
+  }
   let wordIndex = Math.floor(Math.random() * filteredWords.length);
 
   return filteredWords[wordIndex];
@@ -282,7 +285,7 @@ function leaveGame() {
   let game = getCurrentGame();
   let currentTimeRemaining = getTimeRemaining();
   let players = Array.from(Players.find({ gameID: game._id }));
-  
+
   let gameAnalytics = {
     gameID: game._id,
     playerCount: players.length,
@@ -363,7 +366,7 @@ Template.footer.events({
 Template.startMenu.events({
   'click #btn-new-game': function () {
     Session.set("currentView", "createGame");
-    let referrer  = document.referrer;
+    let referrer = document.referrer;
     let referrerAnalytics = {
       cameFrom: referrer,
       action: "New Game"
@@ -372,10 +375,10 @@ Template.startMenu.events({
     Analytics.insert(referrerAnalytics);
   },
   'click #btn-join-game': function () {
-    let referrer  = document.referrer;
+    let referrer = document.referrer;
     let referrerAnalytics = {
-        cameFrom: referrer,
-        action: "Join Game",
+      cameFrom: referrer,
+      action: "Join Game",
     };
 
     Analytics.insert(referrerAnalytics);
@@ -391,10 +394,10 @@ Template.startMenu.helpers({
 });
 
 Template.startMenu.rendered = function () {
-  let referrer  = document.referrer;
+  let referrer = document.referrer;
   let referrerAnalytics = {
-      cameFrom: referrer,
-      action: "Start Page"
+    cameFrom: referrer,
+    action: "Start Page"
   };
   Analytics.insert(referrerAnalytics);
   resetUserState();
@@ -467,12 +470,12 @@ Template.joinGame.events({
         Meteor.subscribe('players', game._id);
         let player = generateNewPlayer(game, playerName);
 
-        let referrer  = document.referrer;
+        let referrer = document.referrer;
         let referrerAnalytics = {
-            cameFrom: referrer,
-            action: "Join Game",
+          cameFrom: referrer,
+          action: "Join Game",
         };
-      
+
         Analytics.insert(referrerAnalytics);
         Session.set('urlAccessCode', null);
         Session.set("gameID", game._id);
@@ -502,10 +505,10 @@ Template.joinGame.helpers({
 Template.joinGame.rendered = function (event) {
   resetUserState();
 
-  let referrer  = document.referrer;
+  let referrer = document.referrer;
   let referrerAnalytics = {
-      cameFrom: referrer,
-      action: "Join Game",
+    cameFrom: referrer,
+    action: "Join Game",
   };
 
   Analytics.insert(referrerAnalytics);
@@ -534,8 +537,17 @@ Template.lobby.helpers({
   categories: function () {
     let words = getWordsProvider();
     const uniqueCategories = [...new Set(words.map(word => word.category))];
+    // sort alphabetically by category
+    uniqueCategories.sort((a, b) => a.localeCompare(b));
+    const categories = uniqueCategories.map((category) => {
+      let categorySelected = amplify.store(category);
+      if (categorySelected === undefined) {
+        categorySelected = true;
+      }
+      return { text: category, selected: categorySelected };
+    });
 
-    return uniqueCategories;
+    return categories;
   },
   players: function () {
     let game = getCurrentGame();
@@ -607,7 +619,7 @@ Template.lobby.events({
       });
     });
 
-     // All Fake Artist Variant
+    // All Fake Artist Variant
     let shouldPlayAllFakeArtistsVariant = document.getElementById("use-all-fake-artists-variant").checked;
 
     let percentEveryoneIsAFakeArtist = 10;
@@ -658,8 +670,8 @@ Template.lobby.events({
     const shouldPlayLessFirstFakeArtistsVariant = document.getElementById('use-less-first-fake-artist-variant').checked;
 
     if (shouldPlayLessFirstFakeArtistsVariant
-          && !isAllFakeArtistsVariantActive
-          && !isNoFakeArtistsVariantActive) {
+      && !isAllFakeArtistsVariantActive
+      && !isNoFakeArtistsVariantActive) {
       if (firstPlayerIndex === fakeArtistIndex) {
         const percentFakeArtistisFirst = 10;
         const isFakeArtistStillFirst = Math.floor(Math.random() * 100) < percentFakeArtistisFirst;
@@ -724,15 +736,19 @@ Template.lobby.events({
 
     Analytics.insert(gameAnalytics);
 
-    Games.update(game._id, { $set: { state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null, usingAllFakeArtistsVariant: shouldPlayNoFakeArtistsVariant, usingNoFakeArist: shouldPlayNoFakeArtistsVariant } });
+    Games.update(game._id, { $set: { state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null, usingAllFakeArtistsVariant: shouldPlayNoFakeArtistsVariant, usingNoFakeArist: shouldPlayNoFakeArtistsVariant, isAllConfusedArtistsVariantActive: false } });
   },
   'click .btn-start': function () {
 
     let game = getCurrentGame();
-    let excludedCategories = document.querySelectorAll('input[name="category-name"]:not(:checked)');
-    excludedCategories = Array.from(excludedCategories).map((category) => category.value);
-    let wordAndCategory = getRandomWordAndCategory(excludedCategories);
-    
+    let categoriesList = document.querySelectorAll('input[name="category-name"]');
+    categoriesList.forEach((category) => {
+      amplify.store(category.value, category.checked);
+    });
+
+    categoriesList = Array.from(categoriesList).filter((category) => category.checked).map((category) => category.value);
+    let wordAndCategory = getRandomWordAndCategory(categoriesList);
+
     let currentPlayers = Array.from(Players.find({ gameID: game._id }));
     let localEndTime = moment().add(game.lengthInMinutes, 'minutes');
     let gameEndTime = TimeSync.serverTime(localEndTime);
@@ -770,8 +786,9 @@ Template.lobby.events({
 
     let percentEveryoneIsAFakeArtist = 10;
     let isEveryoneAFakeArtist = Math.floor(Math.random() * 100) < percentEveryoneIsAFakeArtist;
+    let isAllFakeArtistsVariantActive = shouldPlayAllFakeArtistsVariant && isEveryoneAFakeArtist;
 
-    if (shouldPlayAllFakeArtistsVariant == true && isEveryoneAFakeArtist == true) {
+    if (isAllFakeArtistsVariantActive) {
       currentPlayers.forEach((player) => {
         if (player.isQuestionMaster == false) {
           Players.update(player._id, {
@@ -782,7 +799,6 @@ Template.lobby.events({
         }
       });
     }
-    let isAllFakeArtistsVariantActive = shouldPlayAllFakeArtistsVariant && isEveryoneAFakeArtist;
     // All Fake Artists variant ends
 
     // No Fake Artist Variant
@@ -790,8 +806,9 @@ Template.lobby.events({
 
     let percentNoFakeArtist = 10;
     let isNoFakeArtist = Math.floor(Math.random() * 100) < percentNoFakeArtist;
+    let isNoFakeArtistsVariantActive = shouldPlayNoFakeArtistsVariant && isNoFakeArtist;
 
-    if (shouldPlayNoFakeArtistsVariant && isNoFakeArtist) {
+    if (isNoFakeArtistsVariantActive) {
       currentPlayers.forEach((player) => {
         if (player.isQuestionMaster == false) {
           Players.update(player._id, {
@@ -802,8 +819,27 @@ Template.lobby.events({
         }
       });
     }
-    let isNoFakeArtistsVariantActive = shouldPlayNoFakeArtistsVariant && isNoFakeArtist;
     // No Fake Artist Variant ends
+
+    // All Confused Artist Variant
+    let shouldPlayAllConfusedArtistsVariant = document.getElementById("use-confused-artist-variant").checked;
+    let isAllConfusedArtistsVariantActive = shouldPlayAllConfusedArtistsVariant && !isAllFakeArtistsVariantActive && !isNoFakeArtistsVariantActive;
+    if (isAllConfusedArtistsVariantActive) {
+      let otherWordSameCategory = getRandomWordAndCategory([wordAndCategory.category]);
+      while (wordAndCategory.text === otherWordSameCategory.text) {
+        // ASSUMES that there are at least 2 words in the category
+        // else this will be an infinite loop
+        otherWordSameCategory = getRandomWordAndCategory([wordAndCategory.category]);
+      }
+      // update fake artist's word
+      Players.update(currentPlayers[fakeArtistIndex]._id, {
+        $set: {
+          word: otherWordSameCategory.text,
+        },
+      });
+    }
+
+    // All Confused Artists variant ends
 
     // Fake Artist Less First variant
     let shouldPlayLessFirstFakeArtistsVariant = document.getElementById('use-less-first-fake-artist-variant').checked;
@@ -866,7 +902,12 @@ Template.lobby.events({
 
     Games.update(game._id, {
       $set: {
-        state: 'inProgress', word: wordAndCategory, endTime: gameEndTime, paused: false, pausedTime: null,
+        state: 'inProgress',
+        word: wordAndCategory,
+        endTime: gameEndTime,
+        paused: false,
+        pausedTime: null,
+        isAllConfusedArtistsVariantActive: isAllConfusedArtistsVariantActive,
       },
     });
   },
@@ -882,7 +923,7 @@ Template.lobby.events({
     document.body.removeChild(textArea);
 
     let tooltip = document.getElementById("copyAccessLinkTooltip");
-   
+
     tooltip.innerHTML = TAPi18n.__("ui.copied");
   },
   'mouseout #copyAccessLinkImg': function () {
@@ -985,7 +1026,7 @@ Template.gameView.events({
       timeLeft: currentTimeRemaining / 1000 / 60,
       status: 'game ended',
     };
-  
+
     Analytics.insert(gameAnalytics);
   },
   'click .btn-toggle-status': function () {
