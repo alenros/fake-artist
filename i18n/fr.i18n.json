@@ -21,7 +21,7 @@
         "play with the no-fake-artist variant": "<strong>Pas de Faux Artiste :</strong> Il y a 10 % de chances qu'il n'y ait PAS de Faux Artistes. Si cela se produit, vous ne pouvez gagner que si tous les joueurs votent pour personne (levez votre doigt en l'air).",
         "play with the less first fake-artist variant": "<strong>Départ facilité :</strong> Il y a seulement une faible chance que le Faux Artiste soit le premier.",
         "less first fake-artist tooltip": "Cette variante rend plus facile pour le Faux Artiste de se fondre. Si le Faux Artiste est choisi pour commencer, il a 90 % de chances d'échanger sa place avec quelqu'un d'autre.",
-        "play with the confused artist variant": "<strong>Artiste Confus :</strong> Personne ne sait s'il est le Faux Artiste ou non.",
+        "play with the confused artist variant": "<strong>Artiste Confus :</strong> Un artiste recevra un mot différent de la même catégorie, sans le savoir.",
         "confused artist tooltip": "Cette variante rend tout le monde moins confiant dans son rôle. Vous pourriez penser que vous êtes le Faux Artiste, mais vous pourriez vous tromper !",
         "you are a confused artist": "Vous êtes un Artiste Confus (ou êtes-vous le Faux Artiste ?)",
         "the word": "Le mot",

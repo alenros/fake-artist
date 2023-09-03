@@ -21,7 +21,7 @@
         "play with the no-fake-artist variant": "<strong>No Fake Artist:</strong> There's a 10% chance there is NO Fake-Artist. if this happens you can only win if all players vote for no one (raise your finger in the air).",
         "play with the less first fake-artist variant": "<strong>Better Start:</strong> There's only a slim chance that the Fake-Artist is first.",
         "less first fake-artist tooltip": "This variant makes it easier for the Fake-Artist to blend in. If the Fake-Artist is chosen to go first, he has a 90% chance to switch places with someone else.",
-        "play with the confused artist variant": "<strong>Confused Artist:</strong> No one knows wether they are the Fake-Artist or not.",
+        "play with the confused artist variant": "<strong>Confused Artist:</strong> One artist will get a different word from the same category, without knowing it.",
         "confused artist tooltip": "This variant makes everyone less confident about their role. You might think you are the Fake-Artist, but you might be wrong!",
         "you are a confused artist": "You are a Confused Artist (or are you the Fake-Artist?)",
         "the word": "The Word",

@@ -21,7 +21,7 @@
         "play with the no-fake-artist variant": "<strong>Nadie es el pintor impostor:</strong> Hay un 10% de probabilidades de que no haya ningún pintor impostor. Si eso sucede, la única manera de ganar es si ningún jugador vota a nadie (es decir, todos deben señalar al aire al momento de la votación).",
         "play with the less first fake-artist variant": "<strong>Mejor Comienzo:</strong> Solo hay una pequeña probabilidad de que el Pintor Impostor sea el primero.",
         "less first fake-artist tooltip": "Esta variante facilita que el Pintor Impostor se integre. Si se elige que el Pintor Impostor vaya primero, tiene un 90% de probabilidad de intercambiar lugares con otra persona.",
-        "play with the confused artist variant": "<strong>Artista Confundido:</strong> Nadie sabe si es el Pintor Impostor o no.",
+        "play with the confused artist variant": "<strong>Artista confundido:</strong> Uno de los artistas recibirá una palabra diferente de la misma categoría, sin saberlo.",
         "confused artist tooltip": "Esta variante hace que todos estén menos seguros de su rol. ¡Puedes pensar que eres el Pintor Impostor, pero podrías estar equivocado!",
         "you are a confused artist": "¡Eres un artista confundido (o eres el pintor impostor?)!",
         "the word": "Palabra",
