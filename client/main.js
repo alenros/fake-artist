@@ -225,6 +225,9 @@ function getWordsProvider() {
 function getRandomWordAndCategory(categoriesList) {
   // heh, this should be optimized better.
   let filteredWords = getWordsProvider().filter(word => categoriesList.includes(word.category));
+  if (categoriesList.length === 0) {
+    filteredWords = getWordsProvider();
+  }
   let wordIndex = Math.floor(Math.random() * filteredWords.length);
 
   return filteredWords[wordIndex];
@@ -536,8 +539,15 @@ Template.lobby.helpers({
     const uniqueCategories = [...new Set(words.map(word => word.category))];
     // sort alphabetically by category
     uniqueCategories.sort((a, b) => a.localeCompare(b));
+    const categories = uniqueCategories.map((category) => {
+      let categorySelected = amplify.store(category);
+      if (categorySelected === undefined) {
+        categorySelected = true;
+      }
+      return { text: category, selected: categorySelected };
+    });
 
-    return uniqueCategories;
+    return categories;
   },
   players: function () {
     let game = getCurrentGame();
@@ -731,8 +741,12 @@ Template.lobby.events({
   'click .btn-start': function () {
 
     let game = getCurrentGame();
-    let categoriesList = document.querySelectorAll('input[name="category-name"]:checked');
-    categoriesList = Array.from(categoriesList).map((category) => category.value);
+    let categoriesList = document.querySelectorAll('input[name="category-name"]');
+    categoriesList.forEach((category) => {
+      amplify.store(category.value, category.checked);
+    });
+
+    categoriesList = Array.from(categoriesList).filter((category) => category.checked).map((category) => category.value);
     let wordAndCategory = getRandomWordAndCategory(categoriesList);
 
     let currentPlayers = Array.from(Players.find({ gameID: game._id }));
