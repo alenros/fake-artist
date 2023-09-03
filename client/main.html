@@ -189,7 +189,6 @@
         <a class="btn-toggle-category-select" href="javascript:void(0);">{{_ "ui.show hide" }}</a>
         <div class="category-select form-group" style="display: none;">
           {{#each categories}}
-            <!-- <input type="checkbox" id="{{ this.category }}" name="category-name" value="{{ this.category }}" {{#if this.selected }}checked{{/if}}> -->
             {{#if this.selected }}
             <input type="checkbox" id="{{ this.text }}" name="category-name" value="{{ this.text }}" checked>
             {{else}}
