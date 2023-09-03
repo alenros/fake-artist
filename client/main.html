@@ -133,6 +133,15 @@
     <h4>{{_ "ui.variants"}}</h4>
     <div class="variant">
       <div class="tooltip">
+        <span class="tooltiptext" id="playWithConfusedArtistTooltip">{{_ "ui.confused artist tooltip" }}</span>
+          <label for="use-confused-artist-variant" id="confused-artist-label">
+            <input type="checkbox" id="use-confused-artist-variant" onchange="$('.variant').not(this.parentNode.parentNode.parentNode).toggle();">
+            {{{_ "ui.play with the confused artist variant"}}}
+          </label>
+      </div>
+    </div>
+    <div class="variant">
+      <div class="tooltip">
         <span class="tooltiptext" id="playWithAllFakeArtistsTooltip">{{_ "ui.all fake artists tooltip" }}</span>
           <label for="use-all-fake-artists-variant" id="all-fake-artists-variant-label">
             <input type="checkbox" id="use-all-fake-artists-variant">
@@ -181,7 +190,7 @@
         <div class="category-select form-group" style="display: none;">
           {{#each categories}}
             <input type="checkbox" id="{{ this }}" name="category-name" value="{{ this }}" checked>
-            <label for="{{ this }}" style="display: inline;">{{ this }}</label>
+            <label for="{{ this }}" style="display: inline;">{{ this }}</label><br>
           {{/each}}
         </div>
       </td>
@@ -212,6 +221,9 @@
     <table>
       <tr>
         <td class="status-container-content">
+          {{#if game.isAllConfusedArtistsVariantActive }}
+          <img src="/img/confused-artist.png" width=80px height=80px>
+          {{else }}
           {{#if player.isFakeArtist }}
           <img src="/img/fake-artist.png" width=80px height=80px>
           {{else }}
@@ -221,9 +233,34 @@
           <img src="/img/real-artist.png" width=80px height=80px>
           {{/if}}
           {{/if}}
+          {{/if}}
         </td>
         <td>
           <div class="status-container-content">
+            {{#if game.isAllConfusedArtistsVariantActive }}
+            <div class="player-status player-status-confused-artist">{{{_ "ui.you are a confused artist" }}}</div>
+            <div class="current-word">
+              <div class="current-word-header">
+                {{_ "ui.the word" }}:
+              </div>
+              <div class="current-word-text">
+                {{#if player.isFakeArtist }}
+                <strong>{{toCapitalCase player.word }}</strong>
+                {{else}}
+                <strong>{{toCapitalCase game.word.text  }}</strong>
+                {{/if}}
+              </div>
+            </div>
+
+            <div class="current-category">
+              <div class="current-category-header">
+                {{_ "ui.your category" }}:
+              </div>
+              <div class="current-category-text">
+                {{toCapitalCase player.category }}
+              </div>
+            </div>
+            {{else}}
             {{#if player.isFakeArtist }}
             <div class="player-status player-status-fake-artist"> {{_ "ui.you are the fake artist" }}</div>
             <div class="current-role">
@@ -240,7 +277,6 @@
             {{else}}
             <div class="player-status player-status-not-fake-artist">{{{_ "ui.you are not the fake artist" }}}</div>
             {{/if}}
-
             <div class="current-word">
               <div class="current-word-header">
                 {{_ "ui.the word" }}:
@@ -255,10 +291,12 @@
                 {{_ "ui.your category" }}:
               </div>
               <div class="current-category-text">
-                {{toCapitalCase player.category }}
+                <i>{{toCapitalCase player.category }}</i>
               </div>
             </div>
             {{/if}}
+            {{/if}}
+
           </div>
         </td>
       </tr>
